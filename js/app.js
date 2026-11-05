@@ -25,3 +25,44 @@ unequal:{result:'Las fuentes tienen naturaleza y fechas diferentes. Podrías pro
 equivalent:{result:'Correcto: documentar la procedencia y las limitaciones fortalece la interpretación. Ya puedes iniciar una matriz comparativa.',next:'start'}
 };function branchShow(key){const node=branches[key],e=document.getElementById('branchContent');if(!e)return;e.replaceChildren();if(node.question){const p=document.createElement('p');p.textContent=node.question;e.append(p);node.choices.forEach(([label,target])=>{const b=document.createElement('button');b.textContent=label;b.onclick=()=>branchShow(target);e.append(b)})}else{const p=document.createElement('p');p.className='branch-result';p.textContent=node.result;e.append(p);const b=document.createElement('button');b.textContent=node.next==='start'?'Volver a empezar':'Continuar';b.onclick=()=>branchShow(node.next);e.append(b)}}
 bookRender();branchShow('start');
+
+/* Ruta visual: usa el mismo avance persistido de las actividades existentes. */
+const routeDescriptions=['Comprende qué es comparar sistemas educativos','Define fenómeno, países, nivel y período','Redacta pregunta y objetivos coherentes','Selecciona fuentes y registra referencias','Describe cada sistema con los mismos criterios','Interpreta factores contextuales y evidencias','Organiza los hallazgos en una matriz','Identifica semejanzas y diferencias','Redacta resultados y conclusiones','Revisa coherencia, fuentes y limitaciones'];
+const routeIcons=['⌕','◎','✎','▤','▥','◈','▦','⇄','≡','✓'];
+function renderJourney(){
+ const root=document.getElementById('journeyStops');if(!root)return;
+ const current=Math.min(9,Math.max(0,data.completed));
+ const originalAvatar=document.querySelector('#home .guide-character svg');
+ root.replaceChildren();
+ titles.forEach((title,i)=>{
+ const state=i<data.completed?'done':i===current?'current':'future';
+ const item=document.createElement('div');item.className='journey-stop '+state;
+ const btn=document.createElement('button');btn.className='stop-btn';btn.type='button';
+ const accessible=i<3&&i<=data.completed;btn.disabled=!accessible;
+ btn.setAttribute('aria-label','Paso '+(i+1)+': '+title+'. '+(state==='done'?'Completado':state==='current'?'Paso actual':'Próximamente'));
+ if(state==='current')btn.setAttribute('aria-current','step');
+ if(accessible)btn.onclick=()=>show('s'+(i+1));
+ const circle=document.createElement('span');circle.className='stop-circle';circle.textContent=state==='done'?'✓':routeIcons[i];
+ const copy=document.createElement('span');copy.className='stop-copy';
+ const heading=document.createElement('strong');heading.textContent=(i+1)+'. '+title;
+ const desc=document.createElement('small');desc.textContent=routeDescriptions[i];
+ const status=document.createElement('em');status.textContent=state==='done'?'COMPLETADO':state==='current'?(i<3?'CONTINÚA AQUÍ':'EN PREPARACIÓN'):'PRÓXIMAMENTE';
+ copy.append(heading,desc,status);btn.append(circle,copy);item.append(btn);
+ if(state==='current'&&originalAvatar){
+ const avatar=document.createElement('span');avatar.className='route-avatar';avatar.setAttribute('aria-hidden','true');
+ const art=originalAvatar.cloneNode(true);avatar.append(art);
+ const bubble=document.createElement('span');bubble.className='route-avatar-label';bubble.textContent=i<3?'¡Vamos por este paso!':'Próxima etapa';avatar.append(bubble);btn.append(avatar);
+ }
+ root.append(item);
+ });
+ const pct=Math.round(data.completed/10*100);
+ document.getElementById('routePercent').textContent=pct+'%';
+ document.getElementById('routeProgress').setAttribute('aria-valuenow',String(pct));
+ const next=document.getElementById('routeNext');next.replaceChildren();
+ const title=document.createElement('strong');title.textContent=current<3?'Tu siguiente paso: '+(current+1)+'. '+titles[current]:'Has completado las secciones disponibles';
+ const info=document.createElement('p');info.textContent=current<3?'Tu avatar marca dónde continuar. Al finalizar la actividad, el avance se guarda en este navegador.':'Las siguientes secciones todavía están en preparación. Puedes revisar tus respuestas o descargar tu respaldo.';
+ const action=document.createElement('button');action.textContent=current<3?'Continuar mi investigación':'Ver mi progreso';action.onclick=()=>show(current<3?'s'+(current+1):'progress');
+ next.append(title,info,action);
+}
+const baseRender=render;render=function(){baseRender();renderJourney()};
+renderJourney();
