@@ -66,3 +66,14 @@ function renderJourney(){
 }
 const baseRender=render;render=function(){baseRender();renderJourney()};
 renderJourney();
+
+/* v0.7.1 · Explorador de países; los textos son orientaciones de búsqueda, no datos estadísticos. */
+const countryGuide={
+ argentina:{name:'Argentina',summary:'Caso modelo: dificultades de aprendizaje en educación primaria.',items:['Localiza la Ley 27.306 y comprueba su alcance en la fuente oficial.','Identifica medidas de atención y adaptaciones educativas documentadas.','Registra año, organismo emisor y artículo o apartado utilizado.']},
+ bolivia:{name:'Bolivia',summary:'Caso modelo: dificultades de aprendizaje en educación primaria.',items:['Localiza la Ley 070 y otras disposiciones pertinentes en fuentes oficiales.','Busca documentos sobre estrategias de atención y apoyo educativo.','Distingue entre disposiciones normativas y evidencias de implementación.']},
+ peru:{name:'Perú',summary:'Caso modelo: dificultades de aprendizaje en educación primaria.',items:['Consulta la Ley General de Educación 28044 y verifica su pertinencia.','Identifica orientaciones oficiales y estudios sobre apoyo educativo.','Registra qué información es comparable con Argentina y Bolivia.']}
+};
+let selectedCountry='argentina';
+function selectCountry(code){if(!countryGuide[code])return;selectedCountry=code;const item=countryGuide[code];document.querySelectorAll('.country-choice').forEach(b=>{const active=b.dataset.country===code;b.classList.toggle('active',active);b.setAttribute('aria-pressed',String(active))});document.getElementById('countryTitle').textContent=item.name;document.getElementById('countryTag').textContent='Explorando '+item.name;document.getElementById('countrySummary').textContent=item.summary;const list=document.createElement('ul');item.items.forEach(t=>{const li=document.createElement('li');li.textContent=t;list.append(li)});document.getElementById('countryDetails').replaceChildren(list)}
+function addCountryToSelection(){const field=document.getElementById('countries');if(!field)return;const name=countryGuide[selectedCountry].name;const existing=field.value.split(/[,;\n]+/).map(x=>x.trim()).filter(Boolean);if(!existing.some(x=>x.toLocaleLowerCase('es')===name.toLocaleLowerCase('es')))existing.push(name);field.value=existing.join(', ');save();field.focus()}
+selectCountry('argentina');
