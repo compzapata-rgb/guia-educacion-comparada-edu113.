@@ -88,3 +88,32 @@ body.sidebar-closed footer{margin-left:0}
 
 /* EDU-113 v0.7.1 · Explorador visual de países y lectura de citas */
 .country-explorer{margin:22px 0 30px;border:1px solid #c9dce9;border-radius:20px;padding:clamp(16px,3vw,26px);background:linear-gradient(150deg,#f1f8fc,#fff 65%)}.country-intro h3{margin:10px 0}.country-selector{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:18px 0}.country-choice{border:2px solid #d3e2eb;background:#fff;color:#1f3d66;border-radius:15px;min-height:112px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:10px}.country-choice .country-flag{font-size:34px;line-height:1.2}.country-choice small{color:#587087}.country-choice.active{border-color:#1f3d66;background:#e9f4fa;box-shadow:0 4px 16px #1f3d6620}.country-display{display:grid;grid-template-columns:minmax(180px,.8fr) 1.2fr;gap:22px;align-items:center;border-radius:17px;background:white;border:1px solid #dbe7ee;padding:18px}.country-art svg{width:100%;height:auto;max-height:240px}.country-facts h3{font-size:26px;margin:8px 0}.country-facts ul{padding-left:21px}.country-facts li{margin:8px 0}.country-use{background:#1f3d66!important;color:#fff!important;font-weight:700}.citation-resource{margin:15px 0 20px;background:#f2f7fc;border:1px solid #cbdfea;border-left:5px solid #3977a5;border-radius:13px;padding:18px}.citation-resource h3{padding-left:0;margin:10px 0}.citation-resource a{font-weight:700;color:#1f3d66;text-underline-offset:3px}.citation-resource a:focus-visible{outline:3px solid #d7a21e}@media(max-width:650px){.country-selector{gap:7px}.country-choice{min-height:96px;padding:7px;font-size:13px}.country-choice .country-flag{font-size:27px}.country-display{grid-template-columns:1fr}.country-art{max-width:260px;margin:auto}.country-facts h3{font-size:23px}}
+
+/* EDU-113 v0.8 · Sistema de movimiento accesible y consistencia visual */
+:root{--motion-fast:160ms;--motion-base:240ms;--motion-slow:380ms;--motion-ease:cubic-bezier(.2,.75,.25,1)}
+.skip-link{position:fixed;top:8px;left:8px;z-index:3000;background:#fff;color:#1f3d66;border:3px solid #d7a21e;border-radius:10px;padding:12px 16px;transform:translateY(-150%)}.skip-link:focus{transform:translateY(0)}
+#mainContent:focus{outline:none}
+button,a,summary,input,textarea{touch-action:manipulation}
+button, .search-tools a, .country-choice,.stop-btn{transition:transform var(--motion-base) var(--motion-ease),box-shadow var(--motion-base) ease,background-color var(--motion-fast) ease,border-color var(--motion-fast) ease}
+@media(hover:hover) and (pointer:fine){.card button:not(:disabled):hover,.country-choice:hover,.search-tools a:hover{transform:translateY(-2px);box-shadow:0 9px 23px #193c5d20}.stop-btn:not(:disabled):hover{transform:translateY(-3px)}}
+button:active:not(:disabled){transform:scale(.985)}
+a:focus-visible,summary:focus-visible,.country-choice:focus-visible,.stop-btn:focus-visible{outline:3px solid #d7a21e;outline-offset:3px}
+.country-display{grid-template-columns:1fr;max-width:100%}
+.country-facts{max-width:760px}
+.card,.step-panel,.learning-lead{box-shadow:0 8px 30px #1736550a}
+.learning-fold summary{position:relative;padding-right:48px}
+.learning-fold summary::after{content:'+';position:absolute;right:18px;top:50%;transform:translateY(-50%);font-size:24px;font-weight:400}
+.learning-fold[open] summary::after{content:'−'}
+.learning-fold[open]>:not(summary){animation:edu-reveal var(--motion-base) var(--motion-ease) both}
+.feedback[data-result="correct"]{border-left-color:#23836d;background:#eaf7f0;color:#174e3f}
+.feedback[data-result="incorrect"]{border-left-color:#b65b31;background:#fff2e9;color:#793d20}
+.answer.is-selected{border-width:2px!important}
+.answer.is-correct{border-color:#23836d!important;background:#eaf7f0!important}
+.answer.is-incorrect{border-color:#b65b31!important;background:#fff2e9!important}
+.field-needs-attention{border:2px solid #b65b31!important;background:#fff8f3!important}
+.validation-message{color:#873d1c;font-weight:650;font-size:14px;margin:-8px 0 16px}
+.motion-reveal{opacity:0;transform:translateY(14px);transition:opacity var(--motion-slow) ease,transform var(--motion-slow) var(--motion-ease)}
+.motion-reveal.is-visible{opacity:1;transform:none}
+@keyframes edu-reveal{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}
+@media(max-width:600px){button{min-height:44px}.country-choice{min-height:104px}.container{overflow-wrap:anywhere}.radial-nav{right:14px;bottom:20px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto!important}.guide-character,.route-avatar{animation:none!important}.motion-reveal{opacity:1!important;transform:none!important;transition:none!important}.learning-fold[open]>:not(summary){animation:none!important}*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
