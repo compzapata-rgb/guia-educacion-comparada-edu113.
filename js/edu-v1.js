@@ -189,18 +189,18 @@ card('Parte B · Criterios de comparación','<p>Selecciona entre dos y cuatro cr
 card('Retroalimentación de coherencia','<p>Comprueba si tu objetivo general contiene elementos suficientes, si las acciones específicas contribuyen a lograrlo y si has elegido criterios comunes.</p><button type="button" class="edu-primary" data-m3-review>Revisar mis objetivos y criterios</button><div id="eduM3Review" class="edu-m3-review" role="status" aria-live="polite"><p>Completa tus objetivos y selecciona criterios; después presiona «Revisar».</p></div><p class="field-tip"><strong>Importante:</strong> esta revisión es automática y orientativa. No verifica las fuentes ni puede determinar toda la coherencia metodológica; no sustituye la revisión y orientación del docente.</p>')+
 action(3);
 }
-const m3SpecificOptions={
+function m3SpecificOptions(){return {
 identify:'Identificar las normas y orientaciones relacionadas con '+(data.fields.topic||'el fenómeno estudiado')+' en '+(data.fields.countries||'los países seleccionados')+'.',
 describe:'Describir las estrategias y los programas documentados en '+(data.fields.countries||'los países seleccionados')+'.',
 compare:'Contrastar las semejanzas y diferencias entre los países según los criterios seleccionados.'
-};
+}}
 function m3SpecificKeys(){
 return Array.isArray(data.extra.responses.m3SpecificKeys)?data.extra.responses.m3SpecificKeys:[];
 }
 function m3SyncSpecific(){
 const picked=[...guide.querySelectorAll('[data-m3-specific]:checked')].map(el=>el.dataset.m3Specific);
 data.extra.responses.m3SpecificKeys=picked;
-const descriptions=picked.map(k=>m3SpecificOptions[k]);
+const options=m3SpecificOptions();const descriptions=picked.map(k=>options[k]);
 data.fields.specific1=descriptions[0]||'';
 data.fields.specific2=descriptions[1]||'';
 data.extra.responses.m3Specific3=descriptions[2]||'';
