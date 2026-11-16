@@ -684,3 +684,42 @@ header.edu-header{--header-h:108px;height:var(--header-h);min-height:var(--heade
   header.edu-header .edu-site-title{font-size:10.5px;line-height:1.16;padding-inline:2px}
   .sidebar{top:80px}
 }
+
+/* EDU-113 · Módulos 2 y 3: tarjetas reversibles, banderas y revisión guiada */
+#eduNext .edu-m2-flip-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:12px;margin:16px 0}
+#eduNext .edu-m2-flip{display:block;border:none;padding:0;background:transparent;border-radius:15px;height:152px;perspective:900px;min-width:0;text-align:center}
+#eduNext .edu-m2-flip-inner{position:relative;display:block;width:100%;height:100%;transform-style:preserve-3d;transition:transform .6s ease}
+#eduNext .edu-m2-flip.is-flipped .edu-m2-flip-inner{transform:rotateY(180deg)}
+#eduNext .edu-m2-flip-face{display:flex;position:absolute;inset:0;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:14px;border-radius:15px;backface-visibility:hidden;-webkit-backface-visibility:hidden;border:2px solid #bfd9eb;box-shadow:0 6px 14px #1f3d6611}
+#eduNext .edu-m2-flip-front{background:#eaf4fa;color:#1f3d66}
+#eduNext .edu-m2-flip-back{background:#1f3d66;color:#fff;transform:rotateY(180deg)}
+#eduNext .edu-m2-flip-face strong{font-size:15px;line-height:1.3}
+#eduNext .edu-m2-flip-face small{font-size:11px;line-height:1.25;opacity:.78}
+#eduNext .edu-m2-flip-icon{font-size:23px;color:#d71920}
+#eduNext .edu-m2-flip:focus-visible{outline:3px solid #d71920;outline-offset:4px}
+#eduNext .edu-m2-country-dropdown{background:#fff;border:1px solid #b8cede;border-radius:11px;margin:10px 0}
+#eduNext .edu-m2-country-dropdown summary{padding:14px 16px;cursor:pointer;font-weight:700;color:#1f3d66}
+#eduNext .edu-m2-country-dropdown[open] summary{border-bottom:1px solid #d4e4ee;background:#eaf4fa}
+#eduNext .edu-m2-country-dropdown .edu-m2-country-list{padding:12px;max-height:260px;overflow:auto}
+#eduNext .edu-flag{display:inline-block!important;flex:0 0 33px!important;width:33px!important;height:22px!important;border:1px solid #9aafbd;border-radius:3px!important;box-shadow:0 1px 3px #1f3d661e}
+#eduNext .edu-flag-argentina{background:linear-gradient(to bottom,#74acdf 0 33%,#fff 33% 67%,#74acdf 67%)}
+#eduNext .edu-flag-bolivia{background:linear-gradient(to bottom,#d52b1e 0 33%,#f9e300 33% 67%,#007934 67%)}
+#eduNext .edu-flag-perú{background:linear-gradient(to right,#d91023 0 33%,#fff 33% 67%,#d91023 67%)}
+#eduNext .edu-m3-bloom{padding:17px;background:#eef6fb;border:1px solid #d0e2ed;border-radius:15px;margin:18px 0}
+#eduNext .edu-m3-bloom-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:13px 0}
+#eduNext .edu-m3-bloom-grid>div{border-left:3px solid #d71920;background:#fff;padding:10px;display:flex;flex-direction:column;gap:5px;border-radius:8px}
+#eduNext .edu-m3-bloom-grid small{color:#627891;font-size:12px}
+#eduNext .edu-m3-bloom-grid strong{font-size:14px;color:#1f3d66}
+#eduNext .edu-m3-focus-guide{border:1px solid #d0e2ed;background:#f5fafd;padding:18px;margin:18px 0;border-radius:15px}
+#eduNext .edu-m3-focus-guide li{margin:8px 0;line-height:1.4}
+#eduNext .edu-m3-specific-select{margin:21px 0 14px}
+#eduNext .edu-m3-specific-options{display:grid;gap:10px;margin:14px 0}
+#eduNext .edu-m3-specific-option{display:flex;align-items:flex-start;gap:12px;background:#f2f8fd;border:1px solid #cbdfea;padding:14px;border-radius:11px;cursor:pointer}
+#eduNext .edu-m3-specific-option input{flex:0 0 19px;width:19px;height:19px;margin:3px 0;accent-color:#1f3d66}
+#eduNext .edu-m3-specific-option:has(input:checked){border-color:#3977a5;background:#e5f3fb}
+#eduNext .edu-m3-review{background:#f5fafd;border:1px solid #d0e3f0;border-radius:13px;padding:17px;margin:15px 0}
+#eduNext .edu-m3-review li{margin:10px 0}
+#eduNext .edu-m3-review-good{color:#14583f}
+#eduNext .edu-m3-review-improve{color:#94382b}
+@media(max-width:600px){#eduNext .edu-m2-flip-grid{grid-template-columns:repeat(2,minmax(0,1fr))}#eduNext .edu-m3-bloom-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(prefers-reduced-motion:reduce){#eduNext .edu-m2-flip-inner{transition:none}}
