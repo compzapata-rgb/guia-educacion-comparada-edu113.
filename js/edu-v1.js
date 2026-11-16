@@ -260,16 +260,27 @@ const saved=data.extra.responses['match_'+id]||{};
 return '<div class="edu-match" data-match="'+id+'">'+pairs.map((p,i)=>'<label>'+p[0]+'<select data-match-item="'+i+'"><option value="">Selecciona un ejemplo</option>'+opts([...pairs.map(x=>x[1])].reverse(),saved[i]||'')+'</select></label>').join('')+'<button type="button" data-match-check="'+id+'" class="edu-ghost">Comprobar relaciones</button><p class="edu-feedback" data-match-feedback="'+id+'" role="status"></p></div>'
 }
 function order(id,steps){
-const saved=data.extra.responses['order_'+id];const arr=Array.isArray(saved)&&saved.length===steps.length?saved:id==='search'?[2,0,4,1,5,3]:steps.map((_,i)=>i);if(id==='search'&&(!Array.isArray(saved)||saved.length!==steps.length))data.extra.responses.orderResult_search='';
-return '<div class="edu-order" data-order="'+id+'" data-expected="'+steps.length+'"><p class="field-tip">Ordena los pasos. Puedes arrastrar tarjetas o utilizar las flechas.</p><ol>'+arr.map(idx=>'<li draggable="true" data-order-id="'+idx+'"><span>'+steps[idx]+'</span><div><button type="button" data-move="-1" aria-label="Subir paso">↑</button><button type="button" data-move="1" aria-label="Bajar paso">↓</button></div></li>').join('')+'</ol><button type="button" data-order-check="'+id+'" class="edu-ghost">Comprobar secuencia</button><p class="edu-feedback" data-order-feedback="'+id+'" role="status"></p></div>'
+const saved=data.extra.responses['order_'+id];
+const arr=Array.isArray(saved)&&saved.length===steps.length&&saved.every(v=>Number.isInteger(v)&&v>=0&&v<steps.length)&&new Set(saved).size===steps.length?saved:id==='search'?[3,1,5,0,4,2]:steps.map((_,i)=>i);
+if(id==='search'&&(!Array.isArray(saved)||saved.length!==steps.length))data.extra.responses.orderResult_search='';
+const help=id==='search'?'<p class="edu-order-guidance"><strong>Pista:</strong> primero define qué buscar; después encuentra y abre documentos. Cuando ya leíste una fuente, evalúas su calidad, extraes una evidencia y elaboras la referencia.</p>':'';
+return '<div class="edu-order" data-order="'+id+'" data-expected="'+steps.length+'"><p class="field-tip">Ordena los pasos. Puedes arrastrar tarjetas o utilizar las flechas. Después, presiona «Comprobar secuencia» para recibir pistas.</p>'+help+'<ol>'+arr.map(idx=>'<li draggable="true" data-order-id="'+idx+'"><span>'+steps[idx]+'</span><div><button type="button" data-move="-1" aria-label="Subir paso">↑</button><button type="button" data-move="1" aria-label="Bajar paso">↓</button></div></li>').join('')+'</ol><button type="button" data-order-check="'+id+'" class="edu-ghost">Comprobar secuencia</button><div class="edu-feedback edu-order-feedback" data-order-feedback="'+id+'" role="status" aria-live="polite"></div></div>'
 }
 const searchSteps=[
 'Identificar palabras clave relacionadas con el tema',
-'Seleccionar documentos académicos y fuentes oficiales',
-'Revisar autoría, fecha y contenido del documento',
-'Comprobar que el enlace funciona y conduce al documento original',
-'Registrar la referencia y el fragmento útil',
+'Buscar documentos académicos y oficiales que puedan servir como fuentes',
+'Abrir el documento y comprobar que el enlace funciona',
+'Revisar quién lo escribió, cuándo se publicó y si su contenido es pertinente',
+'Seleccionar un fragmento útil y registrar los datos para encontrarlo',
 'Redactar la referencia bibliográfica según APA 7.ª edición'
+];
+const searchStepReasons=[
+'Antes de buscar, necesitas expresar tu tema mediante palabras clave.',
+'Con las palabras clave, exploras buscadores y encuentras documentos posibles.',
+'Abre los documentos encontrados para confirmar que existen y puedes leerlos.',
+'Después evalúa su autoría, fecha y contenido antes de utilizar sus afirmaciones.',
+'Cuando el documento te resulta pertinente, anota el fragmento y su ubicación.',
+'Finalmente, con los datos comprobados de la fuente, redacta la referencia APA 7.'
 ];
 const m4Searchers=[
 ['Google Académico','https://scholar.google.com/','scholar.google.com','Artículos, tesis y publicaciones académicas'],
@@ -298,7 +309,7 @@ function moduleFour(){
 const topic=m4Topic();
 return '<div class="edu-stage-header"><span class="tag">Módulo 4 · Investiga</span><h2>Fuentes y uso responsable de la inteligencia artificial</h2><p>Aprende a encontrar un documento, seleccionar una cita útil, explicar su importancia y redactar su referencia en APA 7.</p></div>'+
 card('Antes de buscar',quiz('sources','¿Qué fuente ofrece una base más confiable para conocer una ley educativa?',['Una publicación anónima de una red social','El texto de la ley en un portal oficial','Una respuesta de IA sin referencias'],1,'Consulta siempre la fuente original y verifica su vigencia.'))+
-card('Ordena el procedimiento para seleccionar y citar una fuente','<p>Las seis tarjetas aparecen desordenadas. Arrástralas o usa las flechas para establecer la secuencia y presiona <strong>Comprobar secuencia</strong>.</p>'+order('search',searchSteps))+
+card('Ordena el procedimiento para seleccionar y citar una fuente','<p>Las seis tarjetas aparecen desordenadas. Usa las flechas o arrastra cada tarjeta para ordenarlas. <strong>Al comprobar, descubrirás cuántos pasos están bien ubicados y recibirás una pista para corregir el siguiente.</strong> Después de varios intentos podrás consultar el procedimiento explicado.</p>'+order('search',searchSteps))+
 card('Explora distintas fuentes','<p>Las siguientes páginas sirven para <strong>buscar fuentes académicas y documentos oficiales</strong>. No todos los servicios son repositorios: las herramientas de IA ayudan a localizar investigaciones, pero siempre debes abrir y comprobar el documento original.</p>'+m4Links())+
 card('Uso responsable de la inteligencia artificial','<p><strong>La IA puede ayudarte a buscar, organizar información o formular preguntas, pero no debe inventar fuentes ni escribir conclusiones sin evidencias.</strong></p><div class="edu-m4-ai-tips"><div><strong>Úsala para</strong><p>Proponer palabras clave, sugerir dónde buscar, organizar documentos que ya verificaste y aclarar conceptos.</p></div><div><strong>No la utilices para</strong><p>Inventar autores, DOI, citas, páginas, resultados o afirmar que una fuente dice algo sin abrirla.</p></div></div><p><strong>¿Qué es un DOI?</strong> Es un identificador digital permanente que suele utilizarse para localizar artículos y otros documentos académicos. Puede escribirse como <code>https://doi.org/10.xxxx/xxxxx</code>. <strong>No todos los documentos tienen DOI</strong>: si no lo tienen, puedes utilizar la dirección web correspondiente.</p>'+quiz('ai','Una IA te proporciona un DOI que no aparece en la publicación. ¿Qué haces?',['Lo añades porque parece correcto','Compruebas el documento original y descartas el DOI si no es auténtico','Creas un DOI parecido'],1,'Solo se incluyen identificadores y referencias comprobados en las fuentes originales.'))+
 card('NotebookLM: organiza y conversa con tus fuentes','<p><strong>NotebookLM</strong> puede ayudarte a organizar documentos que tú has seleccionado, resumirlos y hacer preguntas sobre su contenido. Sus respuestas deben contrastarse con los pasajes originales; no sustituye a un buscador académico ni garantiza que los documentos sean fiables.</p><div class="edu-m4-notebook-links"><a href="https://notebooklm.google.com/" target="_blank" rel="noopener noreferrer">Abrir NotebookLM</a><a href="https://www.youtube.com/watch?v=g9fwgx54dEo" target="_blank" rel="noopener noreferrer">Ver tutorial de NotebookLM en YouTube (español)</a></div>')+
@@ -488,8 +499,31 @@ function returnToMap(){
 }
 function matchCheck(id){const root=guide.querySelector('[data-match="'+id+'"]');if(!root)return;const selected=[...root.querySelectorAll('select')].map(x=>x.value);const expected=['Dificultades de lectura','Argentina, Bolivia y Perú','Currículo educativo'];const correct=selected.every((v,i)=>v===expected[i]);const msg=root.querySelector('[data-match-feedback]');msg.textContent=correct?'Correcto. El fenómeno es lo que estudias, los países son las unidades y el currículo es un criterio posible.':'Incorrecto. Recuerda: el fenómeno es la situación estudiada; las unidades son los países; el criterio es el aspecto que revisarás en todos.';msg.dataset.result=correct?'correct':'incorrect';put('matchResult_'+id,correct?'correct':'retry')}
 function orderMove(li,offset){const ol=li.parentElement;const list=[...ol.children];const i=list.indexOf(li),j=i+offset;if(j<0||j>=list.length)return;if(offset<0)ol.insertBefore(li,list[j]);else ol.insertBefore(list[j],li);saveOrder(ol.closest('[data-order]'))}
-function saveOrder(root){if(!root)return;put('order_'+root.dataset.order,[...root.querySelectorAll('li')].map(el=>Number(el.dataset.orderId)));if(root.dataset.order==='search'){put('orderResult_search','');const feedback=root.querySelector('[data-order-feedback]');if(feedback)feedback.textContent='Has modificado la secuencia. Vuelve a comprobarla.'}}
-function orderCheck(id){const root=guide.querySelector('[data-order="'+id+'"]');if(!root)return;const arr=[...root.querySelectorAll('li')].map(el=>Number(el.dataset.orderId));const result=arr.every((v,i)=>v===i);root.querySelector('[data-order-feedback]').textContent=result?'Secuencia correcta.':'La secuencia aún no sigue el procedimiento esperado. Revisa los pasos.';put('orderResult_'+id,result?'correct':'retry')}
+function saveOrder(root){if(!root)return;put('order_'+root.dataset.order,[...root.querySelectorAll('li')].map(el=>Number(el.dataset.orderId)));if(root.dataset.order==='search'){put('orderResult_search','');root.querySelectorAll('li').forEach(el=>el.classList.remove('edu-order-correct','edu-order-error'));const feedback=root.querySelector('[data-order-feedback]');if(feedback){feedback.textContent='Has modificado la secuencia. Presiona «Comprobar secuencia» para recibir nuevas pistas.';delete feedback.dataset.result}}}
+function orderCheck(id){
+const root=guide.querySelector('[data-order="'+id+'"]');if(!root)return;
+const items=[...root.querySelectorAll('li')];
+const arr=items.map(el=>Number(el.dataset.orderId));
+const result=arr.every((v,i)=>v===i);
+const feedback=root.querySelector('[data-order-feedback]');
+items.forEach((el,i)=>{el.classList.remove('edu-order-correct','edu-order-error');if(id==='search')el.classList.add(arr[i]===i?'edu-order-correct':'edu-order-error')});
+if(id!=='search'){feedback.textContent=result?'Secuencia correcta.':'La secuencia aún no sigue el procedimiento esperado. Revisa los pasos.';put('orderResult_'+id,result?'correct':'retry');return}
+const prior=Number(data.extra.responses.searchOrderAttempts)||0,attempts=prior+1;
+data.extra.responses.searchOrderAttempts=attempts;
+const right=arr.filter((v,i)=>v===i).length;
+if(result){
+feedback.dataset.result='correct';
+feedback.innerHTML='<strong>¡Secuencia correcta! Los seis pasos están en su lugar.</strong><p>El procedimiento sigue una lógica: preparar la búsqueda → localizar fuentes → abrirlas → evaluar su calidad → registrar un fragmento → redactar la referencia APA 7.</p><ol>'+searchStepReasons.map((reason,i)=>'<li><strong>Paso '+(i+1)+':</strong> '+escapeHTML(reason)+'</li>').join('')+'</ol>';
+}else{
+const first=arr.findIndex((v,i)=>v!==i),found=arr[first];
+feedback.dataset.result='incorrect';
+let hint='La posición '+(first+1)+' todavía no corresponde al paso esperado. '+searchStepReasons[first];
+if(attempts>=2)hint+=' Para este lugar busca la tarjeta que empieza por: «'+searchSteps[first].split(' ').slice(0,3).join(' ')+'…».';
+if(attempts>=3)hint+=' La tarjeta que está aquí actualmente («'+searchSteps[found]+'») corresponde al paso '+(found+1)+'.';
+feedback.innerHTML='<strong>Vas avanzando: '+right+' de 6 pasos están en su posición correcta.</strong><p>'+escapeHTML(hint)+'</p><p>Las tarjetas destacadas en azul están en su lugar; las señaladas en rojo necesitan revisión. Puedes corregirlas y volver a comprobar sin perder tu avance.</p>'+(attempts>=3?'<details><summary>Mostrar la secuencia explicada</summary><ol>'+searchSteps.map((step,i)=>'<li><strong>'+escapeHTML(step)+'.</strong> '+escapeHTML(searchStepReasons[i])+'</li>').join('')+'</ol></details>':'');
+}
+put('orderResult_'+id,result?'correct':'retry');
+}
 let drag=null;
 guide.addEventListener('dragstart',e=>{const li=e.target.closest('[data-order-id]');if(li){drag=li;e.dataTransfer.effectAllowed='move';}});
 guide.addEventListener('dragover',e=>{const li=e.target.closest('[data-order-id]');if(drag&&li&&li!==drag)e.preventDefault()});
