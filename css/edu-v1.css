@@ -769,3 +769,15 @@ header.edu-header{--header-h:108px;height:var(--header-h);min-height:var(--heade
 #eduNext .edu-m3-specific-item label{display:block;margin:0 0 9px;color:#1F3D66;font-weight:750}
 #eduNext .edu-m3-specific-item select{width:100%;max-width:100%;min-width:0;font-size:14px;background:#fff}
 @media(max-width:650px){#eduNext .edu-m3-analyze-grid{grid-template-columns:repeat(2,minmax(0,1fr))}#eduNext .edu-m3-specific-dropdowns{grid-template-columns:1fr}}
+
+/* EDU-113 v2.1 · Retroalimentación formativa de secuencias */
+#eduNext [data-order=search] .edu-order-guidance{background:#eaf4fa;border-left:4px solid #3977a5;border-radius:10px;padding:13px 15px;margin:12px 0;font-size:14px;color:#1f3d66;line-height:1.5}
+#eduNext [data-order=search] li.edu-order-correct{border:2px solid #3977a5;background:#ecf7ff;border-radius:10px}
+#eduNext [data-order=search] li.edu-order-error{border:2px solid #d71920;background:#fff5f5;border-radius:10px}
+#eduNext [data-order=search] .edu-order-feedback{margin-top:15px;line-height:1.55;padding:16px;border-radius:12px;border-left:4px solid #3977a5;background:#f2f9fd}
+#eduNext [data-order=search] .edu-order-feedback[data-result=incorrect]{background:#fff8f8;border-left-color:#d71920;color:#5c3540}
+#eduNext [data-order=search] .edu-order-feedback[data-result=correct]{background:#eef8f3;border-left-color:#27846d;color:#1a5141}
+#eduNext [data-order=search] .edu-order-feedback p{margin:10px 0}
+#eduNext [data-order=search] .edu-order-feedback details{margin:12px 0;background:#fff;border:1px solid #c9dfea;border-radius:10px;padding:12px}
+#eduNext [data-order=search] .edu-order-feedback summary{cursor:pointer;color:#1f3d66;font-weight:750}
+#eduNext [data-order=search] .edu-order-feedback li{margin:9px 0}
