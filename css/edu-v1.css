@@ -161,3 +161,25 @@ header nav,.radial-nav{display:none!important}
 #eduNext .edu-quiz .edu-feedback[data-result=correct]{color:#14583f;background:#e8f7ef;border-left:4px solid #23836d}
 #eduNext .edu-quiz .edu-feedback[data-result=incorrect]{color:#8a3321;background:#fff1ed;border-left:4px solid #bf573f}
 @media(max-width:560px){#eduNext .edu-m2-case-grid{grid-template-columns:repeat(2,minmax(0,1fr))}#eduNext .edu-m2-country-list,#eduNext .edu-m2-dim-list{grid-template-columns:1fr}}
+
+/* EDU-113 · Módulo 3: objetivos mediante tarjetas y preguntas guiadas */
+#eduNext .edu-m3-examples{display:grid;gap:12px}
+#eduNext .edu-m3-example{padding:18px;border:1px solid #ccdeea;border-radius:15px;background:#eef6fc}
+#eduNext .edu-m3-question{border-left:5px solid #3977a5}
+#eduNext .edu-m3-general{background:#eaf7ef;border-color:#cbe8d7;border-left:5px solid #23836d}
+#eduNext .edu-m3-specific-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+#eduNext .edu-m3-specific{background:#f5f1fd;border-color:#e0d5ef}
+#eduNext .edu-m3-label{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:800;color:#1f3d66}
+#eduNext .edu-m3-example p{font-size:15px;line-height:1.55;margin:8px 0 0}
+#eduNext .edu-m3-num{display:grid;place-items:center;border-radius:50%;background:#1f3d66;color:white;width:25px;height:25px}
+#eduNext .edu-m3-step-intro{padding:13px 17px;border:1px dashed #9cb8cd;border-radius:12px;background:#f5f9fc}
+#eduNext .edu-m3-step-intro p{margin:4px 0 0;font-size:14px}
+#eduNext .edu-m3-question-box{background:#f7fafc;border:1px solid #d7e4ed;border-radius:15px;padding:20px;margin:16px 0}
+#eduNext .edu-m3-question-box h4{font-size:18px;margin:0 0 7px;color:#1f3d66}
+#eduNext .edu-m3-question-box>p{margin:7px 0 14px}
+#eduNext .edu-m3-question-box textarea{margin-bottom:12px}
+#eduNext .edu-m3-summary{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin:12px 0}
+#eduNext .edu-m3-summary>div{background:#e9f3fa;padding:10px 12px;border-radius:9px;font-size:14px}
+#eduNext .edu-m3-hints{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+#eduNext .edu-m3-hints>div{border-radius:12px;padding:13px;background:#eef5fa;border:1px solid #d0e0eb}
+@media(max-width:700px){#eduNext .edu-m3-specific-grid,#eduNext .edu-m3-hints,#eduNext .edu-m3-summary{grid-template-columns:1fr}}
