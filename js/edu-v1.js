@@ -175,10 +175,10 @@ const period=escapeHTML(data.fields.period||'el período seleccionado');
 const dims=escapeHTML(data.fields.dims||'las dimensiones seleccionadas');
 return card('Ahora construye tus propios objetivos',
 '<p>En una investigación comparativa, el <strong>objetivo general</strong> expresa lo que quieres lograr. Comienza con un verbo en infinitivo y relaciona tu fenómeno, los países y el nivel educativo.</p>'+
-'<div class="edu-m3-bloom"><h4>Guía breve: taxonomía de Bloom revisada</h4><p>Elige un verbo según lo que realmente vas a hacer. Los niveles orientan, pero un verbo por sí solo no determina la calidad de una investigación.</p><div class="edu-m3-bloom-grid">'+[['Recordar','Identificar'],['Comprender','Explicar'],['Aplicar','Utilizar'],['Analizar','Comparar'],['Evaluar','Valorar'],['Crear','Proponer']].map(x=>'<div><small>'+x[0]+'</small><strong>'+x[1]+'</strong></div>').join('')+'</div><p class="field-tip">Para una investigación comparativa suelen ser útiles <strong>comparar, analizar o examinar</strong>, siempre que correspondan a tu pregunta.</p></div>'+
+'<div class="edu-m3-bloom"><h4>Taxonomía de Bloom</h4><p>La taxonomía de Bloom te ayuda a elegir <strong>qué acción cognitiva</strong> realizarás al investigar. Como la Educación Comparada busca reconocer relaciones, semejanzas y diferencias, nos concentraremos en el nivel <strong>Analizar</strong>. Escoge el verbo según lo que realmente harás: no basta con utilizar un verbo para garantizar que el objetivo esté bien formulado.</p><span class="edu-m3-bloom-level">Nivel cognitivo: Analizar</span><div class="edu-m3-bloom-grid edu-m3-analyze-grid">'+['Analizar','Comparar','Contrastar','Diferenciar','Distinguir','Clasificar','Categorizar','Organizar','Relacionar','Examinar','Descomponer','Atribuir'].map(v=>'<span class="edu-m3-bloom-verb">'+v+'</span>').join('')+'</div><p class="field-tip">Por ejemplo, <strong>comparar</strong> identifica semejanzas y diferencias; <strong>contrastar</strong> destaca diferencias y relaciones; <strong>clasificar</strong> agrupa información por criterios. Selecciona el que corresponda a tu pregunta y a tus fuentes.</p></div>'+
 '<div class="edu-m3-focus-guide"><h4>Antes de redactar, responde mentalmente:</h4><ul><li><strong>¿Qué harás?</strong> ¿Comparar, analizar o examinar?</li><li><strong>¿Qué investigarás?</strong> '+topic+'.</li><li><strong>¿Dónde o entre quiénes?</strong> '+countries+'.</li><li><strong>¿En qué nivel?</strong> '+level+'.</li><li><strong>¿Qué aspectos?</strong> '+dims+'.</li><li><strong>¿En qué período?</strong> '+period+'.</li><li><strong>¿Para qué?</strong> Para identificar y explicar semejanzas y diferencias con evidencias.</li></ul></div>'+
 '<label for="general">Redacta aquí tu objetivo general</label><textarea class="edu-input" id="general" rows="4" placeholder="Comparar ... en ... durante ... para ..."></textarea><button type="button" class="edu-ghost" data-m3-suggest="general">Mostrar propuesta editable</button>'+
-'<div class="edu-m3-specific-select"><h4>¿Qué objetivos específicos te ayudarían a lograrlo?</h4><p>Selecciona las acciones que realizarás para alcanzar tu objetivo general. Puedes elegir dos o tres. Estos pasos deben contribuir a la comparación.</p><div class="edu-m3-specific-options">'+[['identify','Identificar las normas y orientaciones relacionadas con el fenómeno en los países seleccionados.'],['describe','Describir las estrategias o programas documentados en cada país.'],['compare','Contrastar las semejanzas y diferencias según los criterios elegidos.']].map(x=>'<label class="edu-m3-specific-option"><input type="checkbox" data-m3-specific="'+x[0]+'"><span>'+x[1]+'</span></label>').join('')+'</div></div>'+
+'<div class="edu-m3-specific-select"><h4>¿Qué objetivos específicos te ayudarían a lograrlo?</h4><p>Elige <strong>tres o cuatro verbos en infinitivo</strong> que indiquen los pasos necesarios para alcanzar tu objetivo general. No se redactarán objetivos completos por ti: cada verbo es solo el inicio de un objetivo que tendrás que desarrollar.</p><p class="field-tip">Ejemplo de secuencia: <strong>identificar → describir → clasificar → contrastar</strong>. Puedes utilizar otras acciones si son más adecuadas para tu investigación.</p><div class="edu-m3-specific-dropdowns">'+[0,1,2,3].map(i=>'<div class="edu-m3-specific-item"><label for="eduM3Specific'+i+'">Objetivo específico '+(i+1)+(i===3?' (opcional)':'')+'</label><select class="edu-input" id="eduM3Specific'+i+'" data-m3-specific-verb="'+i+'"><option value="">Selecciona un verbo en infinitivo</option><optgroup label="Acciones preparatorias">'+['Identificar','Reconocer','Seleccionar','Describir','Explicar','Recopilar','Registrar','Resumir'].map(v=>'<option value="'+v+'">'+v+'</option>').join('')+'</optgroup><optgroup label="Acciones de análisis">'+['Analizar','Examinar','Clasificar','Categorizar','Organizar','Relacionar','Diferenciar','Distinguir','Comparar','Contrastar'].map(v=>'<option value="'+v+'">'+v+'</option>').join('')+'</optgroup></select></div>').join('')+'</div><p class="field-tip">Recuerda: el objetivo específico completo necesita verbo + qué harás + sobre qué información o casos. Aquí estás seleccionando solamente el verbo inicial.</p></div>'+
 '<p class="field-tip">Tus respuestas se guardan automáticamente. La formulación definitiva debe revisarse con el docente.</p>');
 }
 function moduleThreeExtras(){
@@ -189,29 +189,34 @@ card('Parte B · Criterios de comparación','<p>Selecciona entre dos y cuatro cr
 card('Retroalimentación de coherencia','<p>Comprueba si tu objetivo general contiene elementos suficientes, si las acciones específicas contribuyen a lograrlo y si has elegido criterios comunes.</p><button type="button" class="edu-primary" data-m3-review>Revisar mis objetivos y criterios</button><div id="eduM3Review" class="edu-m3-review" role="status" aria-live="polite"><p>Completa tus objetivos y selecciona criterios; después presiona «Revisar».</p></div><p class="field-tip"><strong>Importante:</strong> esta revisión es automática y orientativa. No verifica las fuentes ni puede determinar toda la coherencia metodológica; no sustituye la revisión y orientación del docente.</p>')+
 action(3);
 }
-function m3SpecificOptions(){return {
-identify:'Identificar las normas y orientaciones relacionadas con '+(data.fields.topic||'el fenómeno estudiado')+' en '+(data.fields.countries||'los países seleccionados')+'.',
-describe:'Describir las estrategias y los programas documentados en '+(data.fields.countries||'los países seleccionados')+'.',
-compare:'Contrastar las semejanzas y diferencias entre los países según los criterios seleccionados.'
-}}
+const m3SpecificVerbs=['Identificar','Reconocer','Seleccionar','Describir','Explicar','Recopilar','Registrar','Resumir','Analizar','Examinar','Clasificar','Categorizar','Organizar','Relacionar','Diferenciar','Distinguir','Comparar','Contrastar'];
 function m3SpecificKeys(){
-return Array.isArray(data.extra.responses.m3SpecificKeys)?data.extra.responses.m3SpecificKeys:[];
+const stored=data.extra.responses.m3SpecificVerbs;
+if(Array.isArray(stored))return stored.slice(0,4).map(v=>m3SpecificVerbs.includes(v)?v:'');
+const legacy=data.extra.responses.m3SpecificKeys;
+if(Array.isArray(legacy)){
+const translation={identify:'Identificar',describe:'Describir',compare:'Contrastar'};
+return legacy.map(v=>translation[v]||'').filter(Boolean).slice(0,4);
+}
+return [];
 }
 function m3SyncSpecific(){
-const picked=[...guide.querySelectorAll('[data-m3-specific]:checked')].map(el=>el.dataset.m3Specific);
-data.extra.responses.m3SpecificKeys=picked;
-const options=m3SpecificOptions();const descriptions=picked.map(k=>options[k]);
-data.fields.specific1=descriptions[0]||'';
-data.fields.specific2=descriptions[1]||'';
-data.extra.responses.m3Specific3=descriptions[2]||'';
-data.fields.coherence=descriptions.length>=2?'Los objetivos específicos seleccionados aportan pasos para alcanzar el objetivo general.':'';
+const choices=[...guide.querySelectorAll('[data-m3-specific-verb]')].map(el=>el.value);
+data.extra.responses.m3SpecificVerbs=choices;
+data.fields.specific1=choices[0]||'';
+data.fields.specific2=choices[1]||'';
+data.extra.responses.m3Specific3=choices[2]||'';
+data.extra.responses.m3Specific4=choices[3]||'';
+data.fields.coherence='';
+data.extra.responses.m3ReviewViewed='';
 persist();
 }
 function m3Init(){
 const general=guide.querySelector('#general');if(general)general.value=data.fields.general||'';
-const keys=m3SpecificKeys();
-guide.querySelectorAll('[data-m3-specific]').forEach(el=>{el.checked=keys.includes(el.dataset.m3Specific)});
-const feedback=guide.querySelector('#eduM3Review');if(feedback&&get('m3ReviewViewed'))m3Review();
+const chosen=m3SpecificKeys();
+guide.querySelectorAll('[data-m3-specific-verb]').forEach(el=>{el.value=chosen[Number(el.dataset.m3SpecificVerb)]||''});
+const area=guide.querySelector('#eduM3Review');
+if(area&&get('m3ReviewViewed'))m3Review(false);
 }
 function m3Suggest(kind){
 if(kind!=='general')return;
@@ -228,7 +233,7 @@ data.fields.general=el.value;persist();el.focus();
 function m3Normalize(s){
 return String(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[.,;:¿?¡!]/g,' ').replace(/\s+/g,' ').trim();
 }
-function m3Review(){
+function m3Review(saveResult=true){
 const area=guide.querySelector('#eduM3Review');if(!area)return;
 const text=(data.fields.general||'').trim(),normalized=m3Normalize(text);
 const countries=m2SelectedCountries();
@@ -242,12 +247,13 @@ checks.push([!data.fields.topic||m3Normalize(text).includes(m3Normalize(data.fie
 checks.push([countries.length!==3||countries.every(country=>normalized.includes(m3Normalize(country))),'Incluye los tres países que elegiste para comparar.']);
 checks.push([!data.fields.level||normalized.includes(m3Normalize(data.fields.level)),'Precisa el nivel o modalidad educativa que investigarás.']);
 checks.push([!data.fields.period||normalized.includes(m3Normalize(data.fields.period)),'Comprueba el período documental.']);
-checks.push([pick.length>=2,'Selecciona al menos dos objetivos específicos que ayuden a lograr el general.']);
-checks.push([pick.includes('compare'),'Considera una acción de contraste para identificar las semejanzas y diferencias.']);
+const picked=pick.filter(Boolean);checks.push([picked.length>=3&&picked.length<=4,'Selecciona tres o cuatro verbos iniciales para los objetivos específicos.']);
+checks.push([new Set(picked).size===picked.length,'Evita repetir el mismo verbo en varios objetivos sin una razón metodológica.']);
+checks.push([picked.some(v=>['Comparar','Contrastar','Analizar','Relacionar','Diferenciar','Distinguir','Clasificar','Categorizar','Examinar'].includes(v)),'Considera al menos una acción de análisis que contribuya a responder tu pregunta comparativa.']);
 checks.push([criteria.length>=2&&criteria.length<=4,'Selecciona entre dos y cuatro criterios de comparación.']);
 const met=checks.filter(x=>x[0]).length;
 area.innerHTML='<h4>Resultado orientativo: '+met+' de '+checks.length+' aspectos identificados</h4><ul>'+checks.map(x=>'<li class="'+(x[0]?'edu-m3-review-good':'edu-m3-review-improve')+'"><span aria-hidden="true">'+(x[0]?'✓':'•')+'</span> '+(x[0]?'Verificado: ':'Por revisar: ')+escapeHTML(x[1])+'</li>').join('')+'</ul><p>La presencia de estos elementos <strong>no garantiza</strong> que los objetivos estén bien formulados. Verifica que las acciones sean viables, que los criterios sean pertinentes y que existan fuentes para cada país. <strong>La revisión docente es imprescindible.</strong></p>';
-put('m3ReviewViewed','yes');
+if(saveResult)put('m3ReviewViewed','yes');
 }
 function match(id,pairs){
 const saved=data.extra.responses['match_'+id]||{};
@@ -445,7 +451,7 @@ if(n!==active)return;
 if(n===0&&(!get('studentName').trim()||get('likert')===''))return msg('Escribe tu nombre y selecciona tu nivel de conocimientos previos.',true);
 if(n===1&&(!data.fields.need?.trim()||!get('researchPurpose')?.trim()||!get('ownDefinition')?.trim()||get('quiz_comparar')!=='1'||get('matchResult_concepts')!=='correct'||m1Practice.some(q=>get('quiz_'+q.id)!==String(q.answer))))return msg('Completa tu situación educativa, qué quieres investigar, las relaciones y las preguntas de repaso. Revisa las respuestas incorrectas.',true);
 if(n===2){const blank=required[2].find(k=>!String(data.fields[k]||'').trim());if(blank)return msg('Completa los campos de tu delimitación: falta '+blank+'.',true);if(m2SelectedCountries().length!==3)return msg('Selecciona exactamente tres países.',true);if(get('quiz_delimit')!=='1'||get('quiz_question')!=='2')return msg('Revisa las dos actividades y sus explicaciones antes de continuar.',true)}
-if(n===3){if(!data.fields.general?.trim()||m3SpecificKeys().length<2)return msg('Redacta el objetivo general y selecciona al menos dos objetivos específicos.',true);if(data.extra.criteria.length<2||data.extra.criteria.length>4)return msg('Selecciona de dos a cuatro criterios.',true);if(!get('m3ReviewViewed'))return msg('Realiza la revisión orientativa de tus objetivos antes de continuar.',true)}
+if(n===3){if(!data.fields.general?.trim()||m3SpecificKeys().filter(Boolean).length<3)return msg('Redacta el objetivo general y selecciona tres o cuatro verbos para tus objetivos específicos.',true);if(data.extra.criteria.length<2||data.extra.criteria.length>4)return msg('Selecciona de dos a cuatro criterios.',true);if(!get('m3ReviewViewed'))return msg('Realiza la revisión orientativa de tus objetivos antes de continuar.',true)}
 if(n===4){const blank=required[4].find(k=>!String(data.fields[k]||'').trim());if(blank)return msg('Completa tu fuente, su localización, el fragmento, el preámbulo y el comentario.',true);if(!m4NormalizeURL(data.fields.sourceUrl))return msg('Introduce un DOI o enlace web con formato válido.',true);if(!get('sourceAPA').trim())return msg('Redacta la referencia bibliográfica en APA 7.',true);if(!get('sourceKeywords').trim())return msg('Escribe las palabras clave de tu búsqueda.',true);if(get('quiz_sources')!=='1'||get('quiz_ai')!=='1'||get('orderResult_search')!=='correct')return msg('Completa las actividades de búsqueda, orden y uso de IA.',true);if(!get('m4ReviewChecked'))return msg('Utiliza la revisión orientativa del preámbulo, cita y comentario.',true);data.extra.sources=data.extra.sources||[];const source={title:data.fields.sourceTitle,url:m4NormalizeURL(data.fields.sourceUrl),locator:data.fields.sourceLocator,idea:data.fields.evidence,note:data.fields.commentary,author:get('sourceAuthor'),year:get('sourceYear'),apa:get('sourceAPA')};const index=data.extra.sources.findIndex(x=>x.url===source.url);if(index>=0)data.extra.sources[index]=source;else data.extra.sources.push(source)}
 if(n===5&&(countries().some(c=>!String(data.extra.descriptions[c]||'').trim())||get('orderResult_paragraph')!=='correct'||get('quiz_paraphrase')!=='1'))return msg('Completa la descripción de cada país y las prácticas del párrafo académico.',true);
 if(n===6&&(!get('similarities').trim()||!get('differences').trim()||get('quiz_matrix')!=='1'||criteria().some(criterion=>countries().some(country=>!String((data.extra.matrix[criterion]||{})[country]||'').trim()))))return msg('Completa tu matriz por país y criterio, señala semejanzas y diferencias y revisa la práctica.',true);
@@ -493,7 +499,7 @@ if(t.dataset.m2Other){data.fields[t.dataset.m2Other]=t.value;persist();return}
 if(t.id==='eduM2DimensionOther'){m2SaveDimensions();return}
 if(t.dataset.save){put(t.dataset.save,t.value);if(['sourceKeywords','sourceAuthor','sourceYear','sourceJournal','sourceVolume','sourceIssue','sourcePages','sourcePublisher','sourceType'].includes(t.dataset.save)){data.extra.responses.m4APAReviewed=''}return}if(t.dataset.countryDescription){data.extra.descriptions[t.dataset.countryDescription]=t.value;persist();return}if(t.dataset.matrixCriterion){data.extra.matrix[t.dataset.matrixCriterion]=data.extra.matrix[t.dataset.matrixCriterion]||{};data.extra.matrix[t.dataset.matrixCriterion][t.dataset.matrixCountry]=t.value;persist();return}if(t.id&&['need','topic','countries','level','period','dims','question','general','specific1','specific2','coherence','preamble','evidence','commentary','sourceTitle','sourceUrl','sourceLocator','sourceIdea','sourceNote'].includes(t.id)){data.fields[t.id]=t.value;persist();if(t.id==='evidence'||t.id==='sourceLocator')m4RenderQuote();if(t.id==='question'){const p=guide.querySelector('#questionMirror');if(p)p.textContent=t.value}}});
 guide.addEventListener('change',e=>{const t=e.target;
-if(t.dataset.m3Specific){m3SyncSpecific();return}
+if(t.dataset.m3SpecificVerb!==undefined){m3SyncSpecific();return}
 if(t.dataset.m2SelectCountry){const selected=guide.querySelectorAll('[data-m2-select-country]:checked');if(selected.length>3){t.checked=false;const msg=guide.querySelector('#eduM2CountryCount');if(msg)msg.textContent='Puedes seleccionar exactamente tres países.';return}m2SaveCountries();return}
 if(t.dataset.m2Dimension){m2SaveDimensions();return}
 if(t.dataset.m2Field){const id=t.dataset.m2Field;const other=guide.querySelector('#'+id+'Other');other.hidden=t.value!=='__other';data.fields[id]=t.value==='__other'?other.value.trim():t.value;persist();if(!other.hidden)other.focus();return}
