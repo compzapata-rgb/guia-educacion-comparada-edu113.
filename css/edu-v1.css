@@ -583,3 +583,104 @@ header.edu-header{--header-h:108px;height:var(--header-h);min-height:var(--heade
   .edu-island-avatar,.edu-island-stage:nth-child(even) .edu-island-avatar{left:auto;right:0;bottom:calc(100% - 10px);width:43px;height:57px}
 }
 @media(prefers-reduced-motion:reduce){.edu-island-avatar{animation:none!important}.edu-island-button{transition:none!important}}
+
+/* EDU-113 v1.7 · Corrección real de la cabecera en pantallas móviles
+   Distribución horizontal: menú | logo EDU-113 | título | logo UAGRM.
+   No afecta la cabecera de escritorio ni al personaje guía. */
+@media (max-width:620px){
+  header.edu-header{
+    --header-h:88px;
+    display:flex;
+    flex-direction:row;
+    flex-wrap:nowrap;
+    align-items:center;
+    justify-content:flex-start;
+    gap:clamp(5px,1.7vw,9px);
+    box-sizing:border-box;
+    width:100%;
+    height:var(--header-h);
+    min-height:var(--header-h);
+    max-height:var(--header-h);
+    padding:8px clamp(7px,2vw,12px);
+    overflow:hidden;
+  }
+  header.edu-header #sidebarToggle{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    grid-column:auto;
+    grid-row:auto;
+    flex:0 0 40px;
+    width:40px;
+    height:42px;
+    padding:4px;
+    margin:0;
+    font-size:23px;
+  }
+  header.edu-header .edu-header-logos{
+    display:grid;
+    flex:1 1 0;
+    min-width:0;
+    width:auto;
+    max-width:none;
+    grid-template-columns:minmax(0,1.13fr) minmax(0,1.19fr) minmax(0,.9fr);
+    grid-template-rows:1fr;
+    justify-items:center;
+    align-items:center;
+    column-gap:clamp(4px,1.2vw,8px);
+  }
+  header.edu-header .edu-header-logos img{
+    display:block;
+    grid-row:1;
+    width:100%;
+    height:auto;
+    min-width:0;
+    max-height:67px;
+    object-fit:contain;
+    object-position:center;
+    flex:initial;
+    margin:0;
+    background:transparent;
+  }
+  header.edu-header .edu-header-main-logo{
+    grid-column:1;
+    justify-self:center;
+    width:100%;
+    max-width:125px;
+  }
+  header.edu-header .edu-site-title{
+    grid-column:2;
+    grid-row:1;
+    align-self:center;
+    justify-self:center;
+    width:100%;
+    max-width:none;
+    min-width:0;
+    margin:0;
+    padding:0 clamp(2px,.8vw,5px);
+    font-size:clamp(11px,3.1vw,14px);
+    line-height:1.18;
+    font-weight:850;
+    text-align:center;
+    letter-spacing:-.015em;
+    overflow-wrap:normal;
+    hyphens:none;
+    text-wrap:balance;
+    border-left:1px solid #c6dcea;
+    border-right:1px solid #c6dcea;
+  }
+  header.edu-header .edu-header-academic-logo{
+    grid-column:3;
+    justify-self:center;
+    width:100%;
+    max-width:99px;
+  }
+  .sidebar{top:88px}
+}
+@media (max-width:360px){
+  header.edu-header{--header-h:80px;gap:4px;padding-inline:5px}
+  header.edu-header #sidebarToggle{flex-basis:35px;width:35px;height:39px}
+  header.edu-header .edu-header-logos{column-gap:3px;grid-template-columns:minmax(0,1.14fr) minmax(0,1.22fr) minmax(0,.86fr)}
+  header.edu-header .edu-site-title{font-size:10.5px;line-height:1.16;padding-inline:2px}
+  .sidebar{top:80px}
+}
