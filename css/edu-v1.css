@@ -90,3 +90,18 @@
 .edu-route-map .tag{margin-bottom:12px}
 .sidebar [hidden]{display:none!important}
 @media (max-width:560px){.edu-map-stations{grid-template-columns:1fr}.edu-map-stop{min-height:64px}}
+
+/* EDU-113 1.0.1 · Navegación única y mapa de flujo en bienvenida */
+#eduNext .edu-step-nav,#eduNext .edu-stage-path{display:none!important}
+header nav,.radial-nav{display:none!important}
+.sidebar [data-edunav]{min-height:42px}
+.edu-workflow{display:flex;align-items:stretch;gap:6px;margin:20px 0 0;padding:8px 0;width:100%}
+.edu-flow-step{flex:1;min-width:0;border:1px solid #c9ddea;border-radius:15px;background:linear-gradient(180deg,#e8f4fb,#f5fafd);color:#1f3d66;min-height:126px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;padding:12px 7px;text-align:center}
+.edu-flow-icon{display:grid;place-items:center;background:white;color:#1f3d66;font-size:26px;font-weight:700;width:42px;height:42px;border:1px solid #c1dce9;border-radius:12px}
+.edu-flow-step strong{font-size:16px}
+.edu-flow-step small{font-size:11px;line-height:1.35;max-width:125px}
+.edu-flow-arrow{display:grid;place-items:center;flex:0 0 18px;font-size:24px;font-weight:800;color:#3977a5}
+#eduNext .edu-module-actions:has([data-complete="0"]){justify-content:flex-end}
+#eduNext .edu-module-actions [data-complete="0"]{flex:0 1 240px}
+@media(max-width:750px){.edu-workflow{flex-direction:column;align-items:stretch;gap:3px}.edu-flow-arrow{transform:rotate(90deg);height:25px;flex:0 0 25px}.edu-flow-step{min-height:85px;display:grid;grid-template-columns:44px 1fr;column-gap:12px;text-align:left;padding:12px 15px}.edu-flow-icon{grid-row:span 2}.edu-flow-step small{max-width:none}.edu-flow-step strong{align-self:end}.edu-flow-step small{align-self:start}}
+@media(prefers-reduced-motion:reduce){.edu-flow-step,.edu-flow-arrow{transition:none!important}}
