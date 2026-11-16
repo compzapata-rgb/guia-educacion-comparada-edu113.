@@ -105,7 +105,7 @@ checkModule(3,['Mi objetivo general responde a mi pregunta.','Los objetivos espe
 }
 function match(id,pairs){
 const saved=data.extra.responses['match_'+id]||{};
-return '<div class="edu-match" data-match="'+id+'">'+pairs.map((p,i)=>'<label>'+p[0]+'<select data-match-item="'+i+'"><option value="">Selecciona un ejemplo</option>'+opts(pairs.map(x=>x[1]).slice(i+1).concat(pairs.map(x=>x[1]).slice(0,i+1)),saved[i]||'')+'</select></label>').join('')+'<button type="button" data-match-check="'+id+'" class="edu-ghost">Comprobar relaciones</button><p class="edu-feedback" data-match-feedback="'+id+'" role="status"></p></div>'
+return '<div class="edu-match" data-match="'+id+'">'+pairs.map((p,i)=>'<label>'+p[0]+'<select data-match-item="'+i+'"><option value="">Selecciona un ejemplo</option>'+opts([...pairs.map(x=>x[1])].reverse(),saved[i]||'')+'</select></label>').join('')+'<button type="button" data-match-check="'+id+'" class="edu-ghost">Comprobar relaciones</button><p class="edu-feedback" data-match-feedback="'+id+'" role="status"></p></div>'
 }
 function order(id,steps){
 const arr=data.extra.responses['order_'+id]||steps.map((_,i)=>i);
