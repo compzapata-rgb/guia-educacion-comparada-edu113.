@@ -133,3 +133,31 @@ header nav,.radial-nav{display:none!important}
 #eduNext .edu-check-intro+.edu-check-panel>h3{display:none}
 @media(max-width:620px){#eduNext .edu-case-grid,#eduNext .edu-phenomena{grid-template-columns:1fr}}
 @media(prefers-reduced-motion:reduce){#eduNext .edu-phenomenon{transition:none}}
+
+/* Módulo 2 · tarjetas de delimitación, países y controles */
+#eduNext .edu-m2-case-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(165px,1fr));gap:12px;margin:16px 0}
+#eduNext .edu-m2-case-tile{display:flex;flex-direction:column;gap:8px;padding:18px 15px;border-radius:16px;border:1px solid #c9dce8;background:#eaf4fb;min-height:145px}
+#eduNext .edu-m2-case-tile:nth-child(5n+2){background:#f0ecfa;border-color:#dcd3f0}
+#eduNext .edu-m2-case-tile:nth-child(5n+3){background:#eaf7ef;border-color:#c8e7d4}
+#eduNext .edu-m2-case-tile:nth-child(5n+4){background:#fff4e8;border-color:#f0dbc2}
+#eduNext .edu-m2-case-tile:nth-child(5n+5){background:#fceef3;border-color:#ebd0dd}
+#eduNext .edu-m2-card-no{font-size:12px;font-weight:800;opacity:.65}
+#eduNext .edu-m2-case-label{font-size:14px;text-decoration:underline;font-weight:800;color:#1f3d66}
+#eduNext .edu-m2-case-tile strong{font-size:15px;line-height:1.45;color:#223f5c}
+#eduNext .edu-m2-country-buttons{display:flex;flex-wrap:wrap;gap:10px;margin:16px 0}
+#eduNext .edu-m2-country-buttons button{display:flex;align-items:center;gap:10px;border:2px solid #cadde8;border-radius:14px;background:#f4f9fd;color:#1f3d66;padding:12px 18px;font-weight:800}
+#eduNext .edu-m2-country-buttons button.is-selected{border-color:#1f3d66;background:#dbeefa}
+#eduNext .edu-m2-country-buttons button span{font-size:25px}
+#eduNext .edu-m2-country-info{border:1px solid #d2e2ed;background:#f8fbfd;padding:20px;border-radius:16px}
+#eduNext .edu-m2-country-info h4{font-size:23px;margin:12px 0}
+#eduNext .edu-m2-country-info li{margin:10px 0;line-height:1.55}
+#eduNext .edu-m2-country-list,#eduNext .edu-m2-dim-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:8px;margin:12px 0}
+#eduNext .edu-m2-country-list label,#eduNext .edu-m2-dim-list label{display:flex;align-items:center;gap:9px;background:#f3f8fc;border:1px solid #d3e2eb;padding:11px;border-radius:11px;cursor:pointer}
+#eduNext .edu-m2-country-list input,#eduNext .edu-m2-dim-list input{flex:0 0 auto;width:18px;height:18px;accent-color:#1f3d66}
+#eduNext .edu-m2-country-field,#eduNext .edu-m2-dimensions{border:1px solid #d2e2ed;border-radius:15px;padding:16px;margin:20px 0;min-width:0}
+#eduNext .edu-m2-country-field legend,#eduNext .edu-m2-dimensions legend{font-weight:800;color:#1f3d66;padding:0 6px}
+#eduNext .edu-m2-country-count{font-weight:800;color:#1f3d66}
+#eduNext .edu-m2-other[hidden]{display:none}
+#eduNext .edu-quiz .edu-feedback[data-result=correct]{color:#14583f;background:#e8f7ef;border-left:4px solid #23836d}
+#eduNext .edu-quiz .edu-feedback[data-result=incorrect]{color:#8a3321;background:#fff1ed;border-left:4px solid #bf573f}
+@media(max-width:560px){#eduNext .edu-m2-case-grid{grid-template-columns:repeat(2,minmax(0,1fr))}#eduNext .edu-m2-country-list,#eduNext .edu-m2-dim-list{grid-template-columns:1fr}}
