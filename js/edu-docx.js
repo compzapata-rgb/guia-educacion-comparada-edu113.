@@ -15,7 +15,7 @@ const add=(label,text)=>{if(text&&String(text).trim())out.push(label+': '+String
 const at=(obj,k)=>obj&&typeof obj==='object'?obj[k]:'';
 out.push('UNIVERSIDAD AUTÓNOMA GABRIEL RENÉ MORENO');
 out.push('CARRERA DE CIENCIAS DE LA EDUCACIÓN');
-out.push('EDU-113 · EDUCACIÓN COMPARADA');
+out.push('EDU-113 · EDUCACIÓN COMPARADA');add('Estudiante (opcional)',x.studentName);
 out.push('Recurso elaborado por Ivon Zapata Roca');
 out.push('Módulo '+stage+': '+names[stage]);
 out.push('Fecha de generación: '+new Date().toLocaleDateString('es-BO'));
