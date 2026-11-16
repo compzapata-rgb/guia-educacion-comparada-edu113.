@@ -759,3 +759,13 @@ header.edu-header{--header-h:108px;height:var(--header-h);min-height:var(--heade
 #eduNext .edu-m4-step .edu-ghost{margin:10px 0}
 #eduNext .edu-order li{touch-action:pan-y}
 @media(max-width:620px){#eduNext .edu-m4-ai-tips,#eduNext .edu-m4-search-grid{grid-template-columns:1fr}#eduNext .edu-m4-step{padding:16px 0}#eduNext .edu-m4-writing-block{padding:14px}}
+
+/* EDU-113 v2.0 · Bloom (solo analizar) y selección de verbos para específicos */
+#eduNext .edu-m3-bloom-level{display:inline-block;margin:12px 0 4px;border-left:4px solid #D71920;background:#fff;border-radius:8px;padding:9px 13px;color:#1F3D66;font-weight:850}
+#eduNext .edu-m3-analyze-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+#eduNext .edu-m3-bloom-verb{display:flex;align-items:center;justify-content:center;text-align:center;min-height:47px;padding:10px 7px;background:#fff;border:1px solid #BFD9E9;border-radius:10px;color:#1F3D66;font-size:13px;font-weight:750}
+#eduNext .edu-m3-specific-dropdowns{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:17px 0}
+#eduNext .edu-m3-specific-item{background:#F1F8FD;border:1px solid #CFDFEA;border-radius:13px;padding:14px}
+#eduNext .edu-m3-specific-item label{display:block;margin:0 0 9px;color:#1F3D66;font-weight:750}
+#eduNext .edu-m3-specific-item select{width:100%;max-width:100%;min-width:0;font-size:14px;background:#fff}
+@media(max-width:650px){#eduNext .edu-m3-analyze-grid{grid-template-columns:repeat(2,minmax(0,1fr))}#eduNext .edu-m3-specific-dropdowns{grid-template-columns:1fr}}
