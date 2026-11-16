@@ -405,8 +405,79 @@ draft+=link;
 const area=guide.querySelector('#edu_sourceAPA');if(area){area.value=draft;put('sourceAPA',draft)}
 if(info)info.textContent='Borrador generado. Comprueba las cursivas del título o revista, las iniciales, el orden de autores y la puntuación. Las referencias finales deben ajustarse manualmente a APA 7.';
 }
+/* Práctica de yuxtaposición: categorías ilustrativas, no datos de países. */
+const juxtaCriteria=['Legislación y protección','Dificultades más frecuentes','Mecanismos de atención'];
+const juxtaContents=['Leyes y derechos','Datos y estudios encontrados','Programas y estrategias'];
+const juxtaTokens=[
+{type:0,label:juxtaCriteria[0]},{type:1,label:juxtaCriteria[1]},{type:2,label:juxtaCriteria[2]},
+...[0,1,2].flatMap(type=>[0,1,2].map(()=>({type:type+3,label:juxtaContents[type]})))
+];
+const juxtaInitial=[8,1,6,11,3,2,7,0,10,4,9,5];
+function juxtaAssignments(){
+const saved=data.extra.responses.juxtaAssignments;
+return Array.isArray(saved)&&saved.length===12?saved.map(v=>Number.isInteger(v)&&v>=0&&v<12?v:null):Array(12).fill(null);
+}
+function juxtaCardMarkup(index){
+const item=juxtaTokens[index];
+return '<button type="button" draggable="true" class="edu-juxta-token" data-juxta-token="'+index+'" aria-pressed="false"><span>'+escapeHTML(item.label)+'</span><small>Seleccionar o arrastrar</small></button>';
+}
+function juxtaPractice(){
+return '<div class="edu-juxta-practice"><p>Completa esta <strong>matriz de ejemplo</strong>. Arrastra las tarjetas a las celdas o toca una tarjeta y luego una celda vacía. Cada fila debe presentar <strong>el mismo criterio</strong> para Argentina, Bolivia y Perú.</p><p class="field-tip"><strong>Importante:</strong> las tarjetas nombran qué información buscar; no contienen resultados verificados de ningún país.</p><div class="edu-juxta-pool" id="eduJuxtaPool" aria-label="Tarjetas disponibles"></div><div class="edu-table-scroll"><table class="edu-juxta-table"><thead><tr><th scope="col">Criterio</th><th scope="col">Argentina</th><th scope="col">Bolivia</th><th scope="col">Perú</th></tr></thead><tbody id="eduJuxtaGrid"></tbody></table></div><div class="edu-juxta-buttons"><button type="button" class="edu-primary" data-juxta-check>Comprobar matriz</button><button type="button" class="edu-ghost" data-juxta-clear>Reiniciar práctica</button></div><div id="eduJuxtaFeedback" class="edu-juxta-feedback" role="status" aria-live="polite"></div></div>';
+}
+function juxtaRender(){
+const pool=guide.querySelector('#eduJuxtaPool'),grid=guide.querySelector('#eduJuxtaGrid');if(!pool||!grid)return;
+const placed=juxtaAssignments(),selected=data.extra.responses.juxtaSelected;
+const available=juxtaInitial.filter(i=>!placed.includes(i));
+pool.innerHTML=available.length?available.map(juxtaCardMarkup).join(''):'<p>Todas las tarjetas están en la matriz. Comprueba su ubicación.</p>';
+grid.innerHTML=[0,1,2].map(row=>'<tr>'+[0,1,2,3].map(col=>{
+const slot=row*4+col,token=placed[slot];
+return '<td><button type="button" class="edu-juxta-slot'+(token!==null?' occupied':'')+'" data-juxta-slot="'+slot+'" aria-label="Fila '+(row+1)+', '+(col?'País '+['Argentina','Bolivia','Perú'][col-1]:'criterio')+'">'+(token===null?'<span>Coloca una tarjeta aquí</span>':'<span>'+escapeHTML(juxtaTokens[token].label)+'</span><small>Seleccionar para mover</small>')+'</button></td>';
+}).join('')+'</tr>').join('');
+guide.querySelectorAll('[data-juxta-token]').forEach(el=>el.classList.toggle('selected',Number(el.dataset.juxtaToken)===selected));
+guide.querySelectorAll('[data-juxta-slot]').forEach(el=>el.classList.toggle('selected',placed[Number(el.dataset.juxtaSlot)]===selected&&selected!==null&&selected!==undefined));
+}
+function juxtaPick(token){data.extra.responses.juxtaSelected=token;persist();juxtaRender()}
+function juxtaPlace(slot,token){
+const values=juxtaAssignments();
+if(token===null||token===undefined||!Number.isInteger(token)||slot<0||slot>11)return;
+const previous=values.indexOf(token);if(previous>=0)values[previous]=null;
+const displaced=values[slot];if(displaced!==null&&previous>=0)values[previous]=displaced;
+values[slot]=token;
+data.extra.responses.juxtaAssignments=values;
+data.extra.responses.juxtaSelected=null;
+data.extra.responses.juxtaResult='';
+persist();juxtaRender();
+const note=guide.querySelector('#eduJuxtaFeedback');if(note)note.textContent='Tarjeta colocada. Puedes reorganizarla antes de comprobar.';
+}
+function juxtaCheck(){
+const values=juxtaAssignments(),feedback=guide.querySelector('#eduJuxtaFeedback');if(!feedback)return;
+const correct=values.filter((token,i)=>token!==null&&juxtaTokens[token].type===(i%4===0?Math.floor(i/4):Math.floor(i/4)+3)).length;
+const done=correct===12;data.extra.responses.juxtaResult=done?'correct':'retry';persist();
+feedback.dataset.result=done?'correct':'incorrect';
+feedback.textContent=done?'¡Matriz de ejemplo correcta! En cada fila un criterio guía la búsqueda de información equivalente para los tres países. Ahora aplicarás esta lógica a tus propios criterios en el módulo 6.':'Hay '+correct+' de 12 tarjetas correctamente ubicadas. Pista: primero coloca los tres criterios en la primera columna. Después sitúa tres tarjetas del mismo tipo de información a lo largo de cada fila. El mismo criterio debe guiar la búsqueda en los tres países.';
+}
+function m8FinalChecklist(){
+const sections=[
+['Introducción y delimitación','Explica el fenómeno, los países y la relevancia del estudio.','El alcance, nivel y período están precisados.'],
+['Pregunta y objetivos','La pregunta y los objetivos se relacionan con el tema.','Los objetivos específicos son viables y contribuyen al objetivo general.'],
+['Fuentes y citas','Las fuentes están relacionadas con los criterios.','Las citas son verificables y tienen referencias adecuadas.'],
+['Desarrollo por países','Se describe cada país con los mismos criterios.','Cada afirmación importante está respaldada por evidencias.'],
+['Yuxtaposición','La matriz contiene los criterios y países elegidos.','Las celdas presentan información comparable y sus fuentes.'],
+['Comparación','Se distinguen semejanzas y diferencias por criterio.','Las comparaciones evitan generalizaciones sin evidencia.'],
+['Conclusiones y referencias','Las conclusiones responden a la pregunta.','Las referencias están revisadas y el trabajo reconoce sus límites.']
+];
+const saved=data.extra.responses.finalChecklist||{};
+return '<div class="edu-final-checklist"><p>Marca cada indicador solo cuando hayas comprobado tu propio informe. Si una casilla queda vacía, identifica qué debes completar antes de entregarlo.</p><div class="edu-table-scroll"><table><thead><tr><th>Apartado del trabajo</th><th>Indicador 1</th><th>Indicador 2</th></tr></thead><tbody>'+sections.map((item,i)=>'<tr><th scope="row">'+item[0]+'</th>'+item.slice(1).map((label,j)=>'<td><label class="edu-final-check"><input type="checkbox" data-final-check="'+i+'-'+j+'" '+(saved[i+'-'+j]?'checked':'')+'><span>'+label+'</span></label></td>').join('')+'</tr>').join('')+'</tbody></table></div><p id="eduFinalChecklistStatus" class="edu-final-status" role="status" aria-live="polite"></p><p class="field-tip">Esta lista es una autoevaluación. No certifica la validez del trabajo ni sustituye la revisión docente.</p></div>';
+}
+function m8ChecklistStatus(){
+const node=guide.querySelector('#eduFinalChecklistStatus');if(!node)return;
+const selected=guide.querySelectorAll('[data-final-check]:checked').length;
+node.textContent='Indicadores revisados: '+selected+' de 14. '+(selected===14?'Has marcado todos: verifica las evidencias antes de entregar.':'Revisa los indicadores pendientes antes de presentar el trabajo.');
+}
 function moduleFive(){
-return '<div class="edu-stage-header"><span class="tag">Módulo 5 · Describe</span><h2>Describe cada caso con evidencia</h2><p>Primero organiza lo que sabes de cada país. Todavía no determines cuál es mejor: documenta hechos comparables.</p></div>'+
+return '<div class="edu-stage-header"><span class="tag">Módulo 5 · Describe</span><h2>Describe cada caso y comprende la yuxtaposición</h2><p>Antes de comparar, reúne y organiza información de cada país con criterios comunes.</p></div>'+
+card('¿Qué es la yuxtaposición?','<p>En una investigación comparada, <strong>yuxtaponer</strong> significa colocar lado a lado la información de distintos países, organizada con los <strong>mismos criterios</strong>. Sirve para observar los casos de manera ordenada antes de establecer semejanzas y diferencias.</p><p><strong>¿Cómo se aplica?</strong> Primero define un criterio, por ejemplo la legislación de apoyo a las dificultades de aprendizaje. Después busca qué leyes y medidas documenta cada país y resume esos hallazgos en su columna. Repite el procedimiento con los demás criterios.</p><p><strong>Pregúntate:</strong> ¿qué criterio estoy investigando?, ¿en qué parte de mis fuentes encuentro esa información?, ¿qué dato puedo resumir sin cambiar su sentido?, ¿qué evidencia lo respalda?</p>')+
+card('Ejemplo','<p>En el trabajo <em>Dificultades de aprendizaje en el nivel primario en Argentina, Bolivia y Perú</em>, la yuxtaposición organiza tres criterios: leyes de protección, dificultades más frecuentes y mecanismos de atención. La tabla siguiente es una <strong>práctica de organización</strong> inspirada en ese trabajo; utiliza categorías, no afirmaciones verificadas sobre los países.</p>'+juxtaPractice())+
 card('Aprende a redactar','<div class="model-example"><strong>Esquema de un párrafo (no es una afirmación verificada)</strong><p>Idea principal → dato documentado y su fuente → explicación → relación con la pregunta.</p></div>'+order('paragraph',['Idea principal','Evidencia y referencia','Explicación del dato','Conexión con la pregunta']))+
 card('Distingue evidencia y opinión',quiz('paraphrase','¿Cuál opción evita atribuir datos no comprobados?',['Todas las escuelas de un país son mejores','Según el documento consultado, la medida indicada en su artículo específico es...','La IA dijo que es cierto'],1,'El alcance de cada afirmación debe corresponder a lo que respalda la fuente.'))+
 card('Escribe un párrafo por país','<p>Países utilizados: <strong id="eduCountriesDescription"></strong></p><div id="eduCaseFields"></div>')+
@@ -430,6 +501,7 @@ return '<div class="edu-stage-header"><span class="tag">Módulo 8 · Comunica</s
 card('Ordena tu informe',order('report',['Portada e introducción','Problema, pregunta y objetivos','Metodología y criterios','Descripción de los casos','Matriz y análisis','Conclusiones y propuestas','Referencias en APA 7']))+
 card('Escribe tus conclusiones',input('conclusion','Conclusiones fundamentadas','Responde a la pregunta sin afirmar más de lo que muestran las evidencias.')+input('presentation','¿Cómo comunicarás los resultados?','Exposición oral, póster o infografía, según las indicaciones docentes.'))+
 card('Revisa tu trabajo','<p>Pregunta: <strong id="eduReportQuestion"></strong></p><p>Objetivo general: <strong id="eduReportObjective"></strong></p><p class="field-tip">Compara ambos y verifica que las conclusiones respondan a lo planteado.</p>')+
+card('Lista final de revisión de mi investigación',m8FinalChecklist())+
 checkModule(8,['Mi pregunta y objetivos son coherentes.','Mi análisis reconoce semejanzas, diferencias y límites.','Mis citas y referencias cumplen APA 7.','Mis conclusiones responden a la pregunta con evidencias.'])+action(8);
 }
 const main=E('mainContent');
@@ -467,7 +539,8 @@ if(n===1){const el=guide.querySelector('#need');if(el)el.value=data.fields.need|
 if(n===2)m2Init();
 if(n===3){m3Init()}
 if(n===4){['preamble','evidence','commentary','sourceTitle','sourceUrl','sourceLocator'].forEach(id=>{const el=guide.querySelector('#'+id);if(el)el.value=data.fields[id]||''});m4RenderQuote()}
-if(n===5)drawDescriptions();
+if(n===5){drawDescriptions();juxtaRender()}
+if(n===8)m8ChecklistStatus();
 if(n===6)drawMatrix();
 if(n===8){E('eduReportQuestion').textContent=data.fields.question||'Pendiente';E('eduReportObjective').textContent=data.fields.general||'Pendiente'}
 document.querySelectorAll('.sidebar [data-page]').forEach(btn=>{btn.classList.toggle('active',btn.dataset.page==='s'+n)});
@@ -544,6 +617,11 @@ feedback.innerHTML='<strong>Vas avanzando: '+right+' de 6 pasos están en su pos
 }
 put('orderResult_'+id,result?'correct':'retry');
 }
+let juxtaDrag=null;
+guide.addEventListener('dragstart',e=>{const token=e.target.closest('[data-juxta-token]');if(token){juxtaDrag=Number(token.dataset.juxtaToken);e.dataTransfer.effectAllowed='move';e.dataTransfer.setData('text/plain',String(juxtaDrag))}});
+guide.addEventListener('dragover',e=>{if(juxtaDrag!==null&&e.target.closest('[data-juxta-slot]'))e.preventDefault()});
+guide.addEventListener('drop',e=>{const slot=e.target.closest('[data-juxta-slot]');if(slot&&juxtaDrag!==null){e.preventDefault();juxtaPlace(Number(slot.dataset.juxtaSlot),juxtaDrag);juxtaDrag=null;}});
+guide.addEventListener('dragend',()=>{juxtaDrag=null});
 let drag=null;
 guide.addEventListener('dragstart',e=>{const li=e.target.closest('[data-order-id]');if(li){drag=li;e.dataTransfer.effectAllowed='move';}});
 guide.addEventListener('dragover',e=>{const li=e.target.closest('[data-order-id]');if(drag&&li&&li!==drag)e.preventDefault()});
@@ -552,13 +630,13 @@ guide.addEventListener('input',e=>{const t=e.target;if(t.dataset.m3SpecificText!
 if(t.dataset.m2Other){data.fields[t.dataset.m2Other]=t.value;persist();return}
 if(t.id==='eduM2DimensionOther'){m2SaveDimensions();return}
 if(t.dataset.save){put(t.dataset.save,t.value);if(['sourceKeywords','sourceAuthor','sourceYear','sourceJournal','sourceVolume','sourceIssue','sourcePages','sourcePublisher','sourceType'].includes(t.dataset.save)){data.extra.responses.m4APAReviewed=''}return}if(t.dataset.countryDescription){data.extra.descriptions[t.dataset.countryDescription]=t.value;persist();return}if(t.dataset.matrixCriterion){data.extra.matrix[t.dataset.matrixCriterion]=data.extra.matrix[t.dataset.matrixCriterion]||{};data.extra.matrix[t.dataset.matrixCriterion][t.dataset.matrixCountry]=t.value;persist();return}if(t.id&&['need','topic','countries','level','period','dims','question','general','specific1','specific2','coherence','preamble','evidence','commentary','sourceTitle','sourceUrl','sourceLocator','sourceIdea','sourceNote'].includes(t.id)){data.fields[t.id]=t.value;persist();if(t.id==='evidence'||t.id==='sourceLocator')m4RenderQuote();if(t.id==='question'){const p=guide.querySelector('#questionMirror');if(p)p.textContent=t.value}}});
-guide.addEventListener('change',e=>{const t=e.target;
+guide.addEventListener('change',e=>{const t=e.target;if(t.dataset.finalCheck!==undefined){data.extra.responses.finalChecklist=data.extra.responses.finalChecklist||{};data.extra.responses.finalChecklist[t.dataset.finalCheck]=t.checked;persist();m8ChecklistStatus();return}
 if(t.dataset.m3SpecificVerb!==undefined){m3SyncSpecific();return}
 if(t.dataset.m2SelectCountry){const selected=guide.querySelectorAll('[data-m2-select-country]:checked');if(selected.length>3){t.checked=false;const msg=guide.querySelector('#eduM2CountryCount');if(msg)msg.textContent='Puedes seleccionar exactamente tres países.';return}m2SaveCountries();return}
 if(t.dataset.m2Dimension){m2SaveDimensions();return}
 if(t.dataset.m2Field){const id=t.dataset.m2Field;const other=guide.querySelector('#'+id+'Other');other.hidden=t.value!=='__other';data.fields[id]=t.value==='__other'?other.value.trim():t.value;persist();if(!other.hidden)other.focus();return}
 if(t.dataset.save){put(t.dataset.save,t.value)}if(t.dataset.checkModule){const n=t.dataset.checkModule;data.extra.checks[n]=data.extra.checks[n]||{};data.extra.checks[n][t.dataset.checkIndex]=t.checked;persist()}if(t.dataset.criterion){if(t.checked&&!data.extra.criteria.includes(t.dataset.criterion))data.extra.criteria.push(t.dataset.criterion);if(!t.checked)data.extra.criteria=data.extra.criteria.filter(x=>x!==t.dataset.criterion);persist()}if(t.dataset.matchItem){const root=t.closest('[data-match]');const key='match_'+root.dataset.match;data.extra.responses[key]=data.extra.responses[key]||{};data.extra.responses[key][t.dataset.matchItem]=t.value;persist()}});
-guide.addEventListener('click',e=>{const t=e.target.closest('button');if(!t)return;if(t.dataset.m4Review!==undefined){m4Review();return}if(t.dataset.m4Apa!==undefined){m4DraftAPA();return}if(t.dataset.m2Flip!==undefined){const flipped=t.classList.toggle('is-flipped');t.setAttribute('aria-pressed',String(flipped));return}if(t.dataset.m3Review!==undefined){m3Review();return}
+guide.addEventListener('click',e=>{const t=e.target.closest('button');if(!t)return;if(t.dataset.juxtaToken!==undefined){juxtaPick(Number(t.dataset.juxtaToken));return}if(t.dataset.juxtaSlot!==undefined){const slot=Number(t.dataset.juxtaSlot),selected=data.extra.responses.juxtaSelected,assigned=juxtaAssignments()[slot];if(selected!==null&&selected!==undefined)juxtaPlace(slot,Number(selected));else if(assigned!==null)juxtaPick(assigned);return}if(t.dataset.juxtaCheck!==undefined){juxtaCheck();return}if(t.dataset.juxtaClear!==undefined){data.extra.responses.juxtaAssignments=Array(12).fill(null);data.extra.responses.juxtaSelected=null;data.extra.responses.juxtaResult='';persist();juxtaRender();const fb=guide.querySelector('#eduJuxtaFeedback');if(fb)fb.textContent='Práctica reiniciada.';return}if(t.dataset.m4Review!==undefined){m4Review();return}if(t.dataset.m4Apa!==undefined){m4DraftAPA();return}if(t.dataset.m2Flip!==undefined){const flipped=t.classList.toggle('is-flipped');t.setAttribute('aria-pressed',String(flipped));return}if(t.dataset.m3Review!==undefined){m3Review();return}
 if(t.dataset.m3Suggest){m3Suggest(t.dataset.m3Suggest);return}
 if(t.dataset.m2Country){guide.querySelectorAll('[data-m2-country]').forEach(b=>{const active=b===t;b.classList.toggle('is-selected',active);b.setAttribute('aria-pressed',String(active))});const info=guide.querySelector('#eduM2CountryInfo');if(info)info.innerHTML=m2CountryHTML(t.dataset.m2Country);return}
 if(t.dataset.stage!==undefined){navigate(Number(t.dataset.stage));return}if(t.dataset.quiz===undefined&&t.dataset.answer!==undefined){const root=t.closest('[data-quiz]'),id=root.dataset.quiz;put('quiz_'+id,t.dataset.answer);root.querySelectorAll('[data-answer]').forEach(btn=>{btn.classList.toggle('chosen',btn===t);btn.setAttribute('aria-pressed',String(btn===t))});const fb=root.querySelector('[data-feedback]');const m2Item=id==='delimit'?{correct:'¡Bien hecho! Identificaste un fenómeno, tres países, nivel, período y dimensiones.',wrong:['La propuesta es demasiado amplia y no delimita países ni criterios.','','No especifica los elementos necesarios para comparar.']}:id==='question'?{correct:'¡Excelente! La pregunta compara las mismas dimensiones en los tres países y define el período.',wrong:['Supone que un país es mejor sin evidencia ni criterios.','Cada país se estudia desde un aspecto diferente; no hay criterios comunes.','','Presupone culpables y no define criterios verificables.']}:null;const m1Item=[...m1Practice,{id:'comparar',q:'',options:[],answer:1,correct:'Compara un mismo fenómeno (apoyo a la lectura) en dos países. Para investigar, aún habría que precisar el nivel y el período.',wrong:['Esta pregunta solo pide definir un concepto. No compara dos casos.','','Esta pregunta es demasiado general: no especifica los casos ni el criterio.']}].find(item=>item.id===id);const right=Number(t.dataset.answer)===Number(root.dataset.correct);fb.dataset.result=right?'correct':'incorrect';fb.textContent=m2Item?(right?'Correcto. '+m2Item.correct:'Incorrecto. '+(m2Item.wrong[Number(t.dataset.answer)]||'Revisa tu respuesta.')):m1Item?(right?'Correcto. '+m1Item.correct:'Incorrecto. '+(m1Item.wrong[Number(t.dataset.answer)]||'Revisa la explicación y vuelve a intentar.')):(right?'Correcto. Puedes continuar.':'Todavía no. Revisa el ejemplo y vuelve a intentarlo.');return}if(t.dataset.phenomenon!==undefined){const item=phenomenaM1[Number(t.dataset.phenomenon)];const field=guide.querySelector('#need');if(item&&field){field.value=item.idea;data.fields.need=field.value;guide.querySelectorAll('[data-phenomenon]').forEach(b=>{const selected=b===t;b.classList.toggle('is-selected',selected);b.setAttribute('aria-pressed',String(selected))});persist();field.focus()}return}if(t.dataset.topic){const f=guide.querySelector('#topic');if(f){f.value=t.dataset.topic;data.fields.topic=t.dataset.topic;persist();f.focus()}return}if(t.id==='eduQuestionDraft'){const f=guide.querySelector('#question');if(f){const q='¿Qué semejanzas y diferencias existen en '+(data.fields.dims||'las estrategias')+' relacionadas con '+(data.fields.topic||'el fenómeno educativo')+' en '+(data.fields.countries||'los países seleccionados')+' durante '+(data.fields.period||'el período definido')+' en '+(data.fields.level||'el nivel seleccionado')+'?';f.value=q;data.fields.question=q;persist();f.focus()}return}if(t.dataset.matchCheck){matchCheck(t.dataset.matchCheck);return}if(t.dataset.orderCheck){orderCheck(t.dataset.orderCheck);return}if(t.dataset.move){orderMove(t.closest('li'),Number(t.dataset.move));return}if(t.dataset.addSource!==undefined){const source={title:data.fields.sourceTitle||'',url:data.fields.sourceUrl||'',locator:data.fields.sourceLocator||'',idea:data.fields.sourceIdea||'',note:data.fields.sourceNote||'',author:get('sourceAuthor'),year:get('sourceYear')};if(!source.title||!source.url||!source.idea||!/^https?:\/\//i.test(source.url)){const p=E('eduSourceBank');p.textContent='Completa título, enlace válido (https://...) e idea útil para guardar la ficha.';return}data.extra.sources=data.extra.sources||[];data.extra.sources.push(source);persist();drawBank();return}if(t.dataset.complete!==undefined){advance(Number(t.dataset.complete));return}if(t.dataset.export!==undefined){exportWord(Number(t.dataset.export));return}});
