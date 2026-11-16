@@ -80,3 +80,13 @@
 #eduNext .edu-legacy input,#eduNext .edu-legacy textarea{max-width:100%}
 @media(max-width:850px){#eduNext{width:100%}.edu-panel{padding:19px}.edu-save-notice{bottom:86px}.edu-step-nav{gap:5px}.edu-step-nav button{width:35px;height:39px}.edu-module-actions{padding:15px}.edu-module-actions button{min-width:100%}}
 @media(prefers-reduced-motion:reduce){.edu-resource-grid a,.edu-step-nav button{transition:none!important;transform:none!important}}
+
+/* Vista accesible de la ruta completa */
+.edu-route-map{margin:20px 0}
+.edu-map-stations{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin:18px 0}
+.edu-map-stop{min-height:80px;text-align:left;line-height:1.4;background:#edf5fb;color:#1f3d66;border:1px solid #cadde9;border-radius:14px;padding:17px;font-weight:700}
+.edu-map-stop:not(:disabled):hover{background:#ddecf6;transform:translateY(-2px)}
+.edu-map-stop:disabled{background:#f4f6f8;color:#5c7184;cursor:not-allowed}
+.edu-route-map .tag{margin-bottom:12px}
+.sidebar [hidden]{display:none!important}
+@media (max-width:560px){.edu-map-stations{grid-template-columns:1fr}.edu-map-stop{min-height:64px}}
