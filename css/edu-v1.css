@@ -723,3 +723,39 @@ header.edu-header{--header-h:108px;height:var(--header-h);min-height:var(--heade
 #eduNext .edu-m3-review-improve{color:#94382b}
 @media(max-width:600px){#eduNext .edu-m2-flip-grid{grid-template-columns:repeat(2,minmax(0,1fr))}#eduNext .edu-m3-bloom-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(prefers-reduced-motion:reduce){#eduNext .edu-m2-flip-inner{transition:none}}
+
+/* EDU 113 módulo 4: recorrido de fuentes y APA 7 */
+#eduNext .edu-m4-search-grid{grid-template-columns:repeat(auto-fit,minmax(205px,1fr));gap:11px}
+#eduNext .edu-m4-search-grid a{display:flex;align-items:center;gap:12px;text-align:left;min-height:82px;padding:13px 15px;border-radius:14px;background:#f4f9fd;border:1px solid #d4e4ef;text-decoration:none;color:#1f3d66}
+#eduNext .edu-m4-search-grid a span{display:flex;flex-direction:column;gap:5px}
+#eduNext .edu-m4-search-grid a strong{font-size:14px;line-height:1.25}
+#eduNext .edu-m4-search-grid a small{font-size:11px;line-height:1.4;color:#5a7286}
+#eduNext .edu-m4-ai-tips{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:16px 0}
+#eduNext .edu-m4-ai-tips>div{padding:17px;border-radius:14px;border:1px solid #c8deee;background:#edf7fd}
+#eduNext .edu-m4-ai-tips>div:nth-child(2){background:#fff3f3;border-color:#edc9cf}
+#eduNext .edu-m4-ai-tips strong{font-size:16px;color:#1f3d66}
+#eduNext .edu-m4-notebook-links{display:flex;gap:10px;flex-wrap:wrap;margin-top:15px}
+#eduNext .edu-m4-notebook-links a{display:inline-flex;align-items:center;background:#eaf4fa;color:#1f3d66;border:1px solid #bad9ed;border-radius:11px;padding:12px 15px;text-decoration:none;font-weight:750}
+#eduNext .edu-m4-notebook-links a:hover{background:#dbeffc}
+#eduNext .edu-m4-step{padding:20px 0 22px;border-bottom:1px solid #dce8f0}
+#eduNext .edu-m4-step:last-child{border-bottom:0}
+#eduNext .edu-m4-step h4{display:flex;align-items:center;gap:10px;margin:0 0 13px;font-size:19px;color:#1f3d66}
+#eduNext .edu-m4-step h4>span{display:grid;place-items:center;width:36px;height:36px;flex:0 0 36px;border-radius:11px;background:#1f3d66;color:white;font-weight:850}
+#eduNext .edu-m4-step>p{margin:10px 0 15px}
+#eduNext .edu-m4-topic{padding:15px;border:1px solid #bfd9e9;border-radius:12px;background:#eaf4fa;color:#1f3d66;font-weight:800}
+#eduNext .edu-m4-search-example{background:#f3f9fc;border-left:4px solid #d71920;padding:12px;border-radius:8px;overflow-wrap:anywhere}
+#eduNext .edu-m4-writing-block{margin:16px 0;padding:17px;background:#f5fafd;border:1px solid #cbdfea;border-radius:14px}
+#eduNext .edu-m4-writing-block h5{font-size:16px;color:#1f3d66;margin:0 0 7px}
+#eduNext .edu-m4-writing-block p{font-size:14px;margin:8px 0 14px;line-height:1.5}
+#eduNext .edu-m4-citation-block{background:#eef6fc;border-left:4px solid #3977a5}
+#eduNext .edu-m4-quote{margin:12px 0;white-space:pre-wrap;overflow-wrap:anywhere;padding:16px 18px;border-radius:11px;background:#fff;color:#254663;font-size:15px;line-height:1.6}
+#eduNext #eduM4QuoteLocation{color:#56718a}
+#eduNext .edu-m4-review{background:#f3f9fd;border:1px solid #c9dfed;border-radius:13px;padding:16px;margin:16px 0}
+#eduNext .edu-m4-review h5{font-size:17px;margin:0 0 8px;color:#1f3d66}
+#eduNext .edu-m4-review li{margin:9px 0;line-height:1.45}
+#eduNext .edu-m4-ok{color:#17664d}
+#eduNext .edu-m4-improve{color:#9a2933}
+#eduNext .edu-m4-apa-feedback{margin:12px 0;color:#1f3d66;line-height:1.45}
+#eduNext .edu-m4-step .edu-ghost{margin:10px 0}
+#eduNext .edu-order li{touch-action:pan-y}
+@media(max-width:620px){#eduNext .edu-m4-ai-tips,#eduNext .edu-m4-search-grid{grid-template-columns:1fr}#eduNext .edu-m4-step{padding:16px 0}#eduNext .edu-m4-writing-block{padding:14px}}
