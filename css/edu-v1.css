@@ -427,3 +427,87 @@ footer{color:#60748B;border-top:1px solid #E0E9F2;background:#FFFFFF}
   #eduNext .edu-phenomenon,#eduNext .edu-resource-grid a,
   #eduNext .edu-panel input,#eduNext .edu-panel textarea{transition:none!important}
 }
+
+/* EDU 113 v1.5 — cabecera con los logotipos oficiales proporcionados.
+   Imágenes independientes, responsive, sin alterar personaje guía. */
+header.edu-header{
+  --header-h:100px;
+  height:var(--header-h);
+  min-height:var(--header-h);
+  padding:8px clamp(14px,2.4vw,32px);
+  display:flex;
+  flex-wrap:nowrap;
+  gap:clamp(12px,2.3vw,30px);
+  align-items:center;
+  background:#fff;
+  border-bottom:3px solid #D71920;
+  overflow:visible;
+}
+.edu-header-logos{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:20px;
+  flex:1;
+  min-width:0;
+  max-width:1120px;
+}
+.edu-header-logos img{
+  display:block;
+  height:auto;
+  object-fit:contain;
+  background:#fff;
+  flex-shrink:1;
+  min-width:0;
+}
+.edu-header-main-logo{
+  width:clamp(200px,28vw,290px);
+  max-height:86px;
+}
+.edu-header-academic-logo{
+  width:clamp(178px,23vw,252px);
+  max-height:82px;
+}
+header.edu-header #sidebarToggle{
+  flex:0 0 44px;
+  width:44px;
+  height:44px;
+}
+.sidebar{top:100px}
+@media(max-width:620px){
+  header.edu-header{
+    --header-h:145px;
+    height:var(--header-h);
+    min-height:var(--header-h);
+    padding:6px 12px 10px;
+    display:grid;
+    grid-template-columns:44px minmax(0,1fr);
+    grid-template-rows:77px 48px;
+    column-gap:8px;
+    row-gap:0;
+    align-items:center;
+  }
+  header.edu-header #sidebarToggle{grid-column:1;grid-row:1}
+  .edu-header-logos{
+    display:contents;
+  }
+  .edu-header-main-logo{
+    grid-column:2;
+    grid-row:1;
+    justify-self:center;
+    width:min(100%,252px);
+    max-height:77px;
+  }
+  .edu-header-academic-logo{
+    grid-column:1 / -1;
+    grid-row:2;
+    justify-self:center;
+    width:min(60vw,184px);
+    max-height:48px;
+  }
+  .sidebar{top:145px}
+}
+@media(min-width:621px) and (max-width:800px){
+  .edu-header-main-logo{width:clamp(180px,29vw,235px)}
+  .edu-header-academic-logo{width:clamp(155px,25vw,210px)}
+}
