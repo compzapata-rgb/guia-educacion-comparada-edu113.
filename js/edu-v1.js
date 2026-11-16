@@ -2,12 +2,12 @@
 /* EDU-113 v1.0 · Ampliación modular conservando data, ids y clave localStorage */
 (function(){
 'use strict';
-const labels=['Bienvenida','¿Qué es la investigación comparativa?','Delimitar tema','Objetivos y criterios','Fuentes e IA responsable','Describir cada caso','Matriz comparativa','Interpretar y explicar','Redactar y revisar'];
+const labels=['Bienvenida','¿Qué es la investigación comparativa?','Delimitar tema','Objetivos y criterios','Fuentes y uso responsable de la inteligencia artificial','Describir cada caso','Matriz comparativa','Interpretar y explicar','Redactar y revisar'];
 const descriptions=['Conoce la guía y registra tu punto de partida','Distingue describir, investigar y comparar','Define fenómeno, tres países, nivel, periodo y dimensiones','Formula objetivos y elige criterios pertinentes','Localiza, verifica y registra fuentes','Redacta descripciones con evidencias por país','Organiza hallazgos con criterios comunes','Analiza semejanzas, diferencias y contexto','Revisa conclusiones y prepara tu informe'];
 const required={
 1:['need'],2:['topic','countries','level','period','dims'],
 3:['general','specific1','specific2'],
-4:['sourceTitle','sourceUrl','sourceLocator','sourceIdea','sourceNote'],
+4:['sourceTitle','sourceUrl','sourceLocator','preamble','evidence','commentary'],
 5:[],6:[],7:[],8:[]
 };
 const defaults=['Argentina','Bolivia','Perú'];
@@ -254,31 +254,119 @@ const saved=data.extra.responses['match_'+id]||{};
 return '<div class="edu-match" data-match="'+id+'">'+pairs.map((p,i)=>'<label>'+p[0]+'<select data-match-item="'+i+'"><option value="">Selecciona un ejemplo</option>'+opts([...pairs.map(x=>x[1])].reverse(),saved[i]||'')+'</select></label>').join('')+'<button type="button" data-match-check="'+id+'" class="edu-ghost">Comprobar relaciones</button><p class="edu-feedback" data-match-feedback="'+id+'" role="status"></p></div>'
 }
 function order(id,steps){
-const arr=data.extra.responses['order_'+id]||steps.map((_,i)=>i);
+const saved=data.extra.responses['order_'+id];const arr=Array.isArray(saved)&&saved.length===steps.length?saved:id==='search'?[2,0,4,1,5,3]:steps.map((_,i)=>i);if(id==='search'&&(!Array.isArray(saved)||saved.length!==steps.length))data.extra.responses.orderResult_search='';
 return '<div class="edu-order" data-order="'+id+'" data-expected="'+steps.length+'"><p class="field-tip">Ordena los pasos. Puedes arrastrar tarjetas o utilizar las flechas.</p><ol>'+arr.map(idx=>'<li draggable="true" data-order-id="'+idx+'"><span>'+steps[idx]+'</span><div><button type="button" data-move="-1" aria-label="Subir paso">↑</button><button type="button" data-move="1" aria-label="Bajar paso">↓</button></div></li>').join('')+'</ol><button type="button" data-order-check="'+id+'" class="edu-ghost">Comprobar secuencia</button><p class="edu-feedback" data-order-feedback="'+id+'" role="status"></p></div>'
 }
-const searchSteps=['Identificar palabras clave','Localizar fuentes académicas y oficiales','Revisar autoría, fecha y contenido','Verificar el enlace y la evidencia','Registrar la referencia y la idea útil'];
+const searchSteps=[
+'Identificar palabras clave relacionadas con el tema',
+'Seleccionar documentos académicos y fuentes oficiales',
+'Revisar autoría, fecha y contenido del documento',
+'Comprobar que el enlace funciona y conduce al documento original',
+'Registrar la referencia y el fragmento útil',
+'Redactar la referencia bibliográfica según APA 7.ª edición'
+];
+const m4Searchers=[
+['Google Académico','https://scholar.google.com/','scholar.google.com','Artículos, tesis y publicaciones académicas'],
+['SciELO','https://scielo.org/','scielo.org','Revistas científicas de acceso abierto'],
+['Redalyc','https://www.redalyc.org/','redalyc.org','Revistas científicas de América Latina'],
+['Dialnet','https://dialnet.unirioja.es/','dialnet.unirioja.es','Artículos, tesis y libros académicos'],
+['ERIC','https://eric.ed.gov/','eric.ed.gov','Estudios especializados en educación'],
+['Elicit','https://elicit.com/','elicit.com','Búsqueda asistida de literatura académica'],
+['ResearchRabbit','https://www.researchrabbit.ai/','researchrabbit.ai','Exploración de investigaciones relacionadas'],
+['Perplexity','https://www.perplexity.ai/','perplexity.ai','Búsqueda asistida con enlaces a fuentes'],
+['UNESCO','https://www.unesco.org/','unesco.org','Documentos e informes institucionales']
+];
+function m4Links(){
+return '<div class="edu-resource-grid edu-m4-search-grid">'+m4Searchers.map(r=>'<a href="'+r[1]+'" target="_blank" rel="noopener noreferrer"><img src="https://www.google.com/s2/favicons?domain='+r[2]+'&sz=128" width="34" height="34" alt="" loading="lazy" onerror="this.hidden=true"><span><strong>'+r[0]+'</strong><small>'+r[3]+'</small></span></a>').join('')+'</div>';
+}
+function m4Topic(){
+const topic=(data.fields.topic||'el fenómeno que elegiste').trim();
+const level=(data.fields.level||'el nivel educativo seleccionado').trim();
+const countries=(data.fields.countries||'los países seleccionados').trim();
+return {topic,level,countries,query:topic+' '+level+' '+countries};
+}
+function m4Input(key,label,placeholder,rows=2){
+return '<label for="edu_'+key+'">'+label+'</label><textarea class="edu-input" id="edu_'+key+'" data-save="'+key+'" rows="'+rows+'" placeholder="'+escapeHTML(placeholder)+'"></textarea>';
+}
 function moduleFour(){
-return '<div class="edu-stage-header"><span class="tag">Módulo 4 · Investiga</span><h2>Busca y registra fuentes que respondan a tu pregunta</h2><p>Empieza por tus objetivos y criterios. Una fuente será útil si aporta evidencia verificable sobre lo que deseas comparar.</p></div>'+
-card('Antes de buscar',quiz('sources','¿Qué fuente ofrece una mejor base para conocer una ley educativa?',['Una publicación anónima de una red social','El texto de la ley en un portal oficial','Una respuesta de IA sin referencias'],1,'Comprueba siempre el documento original y su fecha.'))+
-card('Ordena el procedimiento',order('search',searchSteps))+
-card('Explora distintas fuentes','<div class="edu-resource-grid">'+[
-['Google Académico','https://scholar.google.com/','scholar.google.com'],
-['SciELO','https://scielo.org/','scielo.org'],
-['Redalyc','https://www.redalyc.org/','redalyc.org'],
-['Dialnet','https://dialnet.unirioja.es/','dialnet.unirioja.es'],
-['ERIC','https://eric.ed.gov/','eric.ed.gov'],
-['Elicit','https://elicit.com/','elicit.com'],
-['ResearchRabbit','https://www.researchrabbit.ai/','researchrabbit.ai'],
-['Perplexity','https://www.perplexity.ai/','perplexity.ai'],
-['NotebookLM','https://notebooklm.google.com/','notebooklm.google.com'],
-['UNESCO','https://www.unesco.org/','unesco.org']
-].map(r=>'<a href="'+r[1]+'" target="_blank" rel="noopener noreferrer"><img src="https://www.google.com/s2/favicons?domain='+r[2]+'&sz=128" width="34" height="34" alt="" loading="lazy" onerror="this.hidden=true"><span>'+r[0]+'</span></a>').join('')+'</div><p class="field-tip">Los buscadores requieren conexión. Los resultados deben comprobarse en las fuentes originales.</p>')+
-card('La IA puede ayudarte, pero no investiga por ti','<p><strong>Pregunta demasiado general:</strong> «Dame fuentes sobre dificultades de aprendizaje».</p><p><strong>Mejor instrucción:</strong> «Encuentra fuentes oficiales y académicas sobre dificultades de aprendizaje en educación primaria, indicando autor, año, enlace verificable y limitaciones. No inventes referencias».</p>'+fold('Para utilizar NotebookLM de forma crítica','Pide que localice pasajes de los documentos cargados con sus secciones y luego vuelve al texto original para confirmar las afirmaciones.')+
-quiz('ai','¿Qué haces si una IA ofrece un DOI que no puedes localizar?',['Lo citas porque parece académico','Lo verificas en el sitio editorial y no lo utilizas si no existe','Lo sustituyes por otro inventado'],1,'La cita solo es válida si la fuente existe y respalda realmente la afirmación.'))+
-card('Mi primera ficha de fuente','<p class="field-tip">Conservamos los datos introducidos en la versión anterior. Puedes registrar nuevas fuentes de forma sucesiva.</p><div id="eduSourceMove"></div>'+input('sourceAuthor','Autoría o institución','Ministerio, universidad, investigadores',false)+input('sourceYear','Año de publicación','Ej. 2023',false)+'<button type="button" data-add-source class="edu-ghost">Guardar ficha en mi banco</button><div id="eduSourceBank"></div>')+
-card('Citas y escritura académica','<p><a href="https://leo.uniandes.edu.co/uso-de-citas-en-la-escritura-academica/" target="_blank" rel="noopener noreferrer">Guía LEO de la Universidad de los Andes: uso de citas</a></p><p>Introduce la evidencia, incorpora una cita o paráfrasis verificable y explica qué aporta a tu comparación.</p>')+
-checkModule(4,['La fuente tiene autoría y fecha identificables.','Abrí la fuente y comprobé su contenido.','Registré su relación con al menos un criterio.'])+action(4);
+const topic=m4Topic();
+return '<div class="edu-stage-header"><span class="tag">Módulo 4 · Investiga</span><h2>Fuentes y uso responsable de la inteligencia artificial</h2><p>Aprende a encontrar un documento, seleccionar una cita útil, explicar su importancia y redactar su referencia en APA 7.</p></div>'+
+card('Antes de buscar',quiz('sources','¿Qué fuente ofrece una base más confiable para conocer una ley educativa?',['Una publicación anónima de una red social','El texto de la ley en un portal oficial','Una respuesta de IA sin referencias'],1,'Consulta siempre la fuente original y verifica su vigencia.'))+
+card('Ordena el procedimiento para seleccionar y citar una fuente','<p>Las seis tarjetas aparecen desordenadas. Arrástralas o usa las flechas para establecer la secuencia y presiona <strong>Comprobar secuencia</strong>.</p>'+order('search',searchSteps))+
+card('Explora distintas fuentes','<p>Las siguientes páginas sirven para <strong>buscar fuentes académicas y documentos oficiales</strong>. No todos los servicios son repositorios: las herramientas de IA ayudan a localizar investigaciones, pero siempre debes abrir y comprobar el documento original.</p>'+m4Links())+
+card('Uso responsable de la inteligencia artificial','<p><strong>La IA puede ayudarte a buscar, organizar información o formular preguntas, pero no debe inventar fuentes ni escribir conclusiones sin evidencias.</strong></p><div class="edu-m4-ai-tips"><div><strong>Úsala para</strong><p>Proponer palabras clave, sugerir dónde buscar, organizar documentos que ya verificaste y aclarar conceptos.</p></div><div><strong>No la utilices para</strong><p>Inventar autores, DOI, citas, páginas, resultados o afirmar que una fuente dice algo sin abrirla.</p></div></div><p><strong>¿Qué es un DOI?</strong> Es un identificador digital permanente que suele utilizarse para localizar artículos y otros documentos académicos. Puede escribirse como <code>https://doi.org/10.xxxx/xxxxx</code>. <strong>No todos los documentos tienen DOI</strong>: si no lo tienen, puedes utilizar la dirección web correspondiente.</p>'+quiz('ai','Una IA te proporciona un DOI que no aparece en la publicación. ¿Qué haces?',['Lo añades porque parece correcto','Compruebas el documento original y descartas el DOI si no es auténtico','Creas un DOI parecido'],1,'Solo se incluyen identificadores y referencias comprobados en las fuentes originales.'))+
+card('NotebookLM: organiza y conversa con tus fuentes','<p><strong>NotebookLM</strong> puede ayudarte a organizar documentos que tú has seleccionado, resumirlos y hacer preguntas sobre su contenido. Sus respuestas deben contrastarse con los pasajes originales; no sustituye a un buscador académico ni garantiza que los documentos sean fiables.</p><div class="edu-m4-notebook-links"><a href="https://notebooklm.google.com/" target="_blank" rel="noopener noreferrer">Abrir NotebookLM</a><a href="https://www.youtube.com/watch?v=g9fwgx54dEo" target="_blank" rel="noopener noreferrer">Ver tutorial de NotebookLM en YouTube (español)</a></div>')+
+card('Mi primera fuente','<p>Realiza los siguientes pasos con <strong>un documento real</strong> relacionado con tu tema. La guía guarda lo que escribes en este navegador.</p>'+
+'<section class="edu-m4-step"><h4><span>1</span> Define las palabras clave</h4><p><strong>Si tu tema de investigación es:</strong></p><div class="edu-m4-topic" id="eduM4Topic">'+escapeHTML(topic.topic)+' · '+escapeHTML(topic.level)+' · '+escapeHTML(topic.countries)+'</div><p>Para buscar, combina el fenómeno, el nivel educativo y uno o más países. Prueba también sinónimos y filtra los resultados por fecha.</p><p class="edu-m4-search-example"><strong>Ejemplo de búsqueda:</strong> <code>'+escapeHTML(topic.query)+'</code></p>'+m4Input('sourceKeywords','Escribe las palabras clave que utilizarás','Ejemplo: dificultades de aprendizaje primaria Bolivia currículo',2)+'</section>'+
+'<section class="edu-m4-step"><h4><span>2</span> Explora buscadores académicos</h4><p>Abre uno o varios buscadores. Busca un documento completo y relacionado con tu fenómeno y los criterios seleccionados.</p>'+m4Links()+'</section>'+
+'<section class="edu-m4-step"><h4><span>3</span> Selecciona un documento</h4><p>Elige una fuente que hayas abierto. Copia su <strong>DOI o enlace web verificable</strong> y anota los datos que necesitarás para citarla.</p><label for="sourceUrl">DOI o dirección web del documento</label><input class="edu-input" id="sourceUrl" type="text" placeholder="https://doi.org/10.... o https://..."><label for="sourceTitle">Título del documento</label><input class="edu-input" id="sourceTitle" type="text" placeholder="Copia el título tal como aparece en la fuente"><label for="sourceLocator">Página, artículo o apartado donde aparece el fragmento</label><input class="edu-input" id="sourceLocator" type="text" placeholder="Ejemplo: p. 12, art. 5 o sección de resultados"></section>'+
+'<section class="edu-m4-step"><h4><span>4</span> Selecciona un fragmento pertinente</h4><p>Lee el documento y elige un fragmento que ayude a responder tu pregunta. <strong>Cópialo fielmente y verifica su ubicación.</strong> Para tu informe, distingue siempre una cita textual de una paráfrasis propia.</p><label for="evidence">Fragmento del documento (cita textual)</label><textarea class="edu-input" id="evidence" rows="4" placeholder="Pega aquí el fragmento exacto, sin modificar sus palabras."></textarea></section>'+
+'<section class="edu-m4-step"><h4><span>5</span> Introduce la cita y comenta su aporte</h4><p>Una cita necesita contexto y explicación. Lee las preguntas de cada bloque y redacta con tus propias palabras.</p>'+
+'<div class="edu-m4-writing-block"><h5>Preámbulo: presenta la cita</h5><p>¿Quién escribió el documento? ¿De qué trata? ¿Por qué este fragmento es pertinente para tu investigación?</p><label for="preamble">Tu preámbulo</label><textarea class="edu-input" id="preamble" rows="4" placeholder="Introduce la fuente y explica por qué presentarás esta evidencia."></textarea></div>'+
+'<div class="edu-m4-writing-block edu-m4-citation-block"><h5>Fragmento seleccionado</h5><p>Este es el texto que elegiste en el paso 4. Confirma que corresponde a la fuente y que anotaste su página o apartado.</p><blockquote id="eduM4Quote" class="edu-m4-quote">Tu fragmento aparecerá aquí cuando lo pegues en el paso 4.</blockquote><small id="eduM4QuoteLocation"></small></div>'+
+'<div class="edu-m4-writing-block"><h5>Comentario: explica la cita</h5><p>¿Qué demuestra el fragmento? ¿Qué relación tiene con tu fenómeno o criterio? ¿Qué no podemos concluir solo con esta evidencia?</p><label for="commentary">Tu comentario</label><textarea class="edu-input" id="commentary" rows="4" placeholder="Explica con tus palabras qué aporta el fragmento a la investigación."></textarea></div>'+
+'<button type="button" class="edu-primary" data-m4-review>Analizar preámbulo, cita y comentario</button><div id="eduM4Review" class="edu-m4-review" aria-live="polite" role="status"><p>Escribe los tres elementos y selecciona «Analizar» para recibir recomendaciones.</p></div><p class="field-tip">La retroalimentación comprueba señales básicas de claridad, pertinencia y documentación. No puede verificar automáticamente la fidelidad de la cita ni determinar toda su coherencia académica. Contrasta siempre la fuente y consulta al docente.</p></section>'+
+'<section class="edu-m4-step"><h4><span>6</span> Redacta la referencia en APA 7.ª edición</h4><p>Usa los datos <strong>reales</strong> del documento. Selecciona el tipo de fuente, completa los campos y genera un borrador editable. Un artículo de revista, un informe y una página web no tienen exactamente el mismo formato.</p><label for="edu_sourceType">Tipo de documento</label><select class="edu-input" id="edu_sourceType" data-save="sourceType"><option value="">Selecciona el tipo</option><option value="article">Artículo de revista científica</option><option value="web">Página web</option><option value="report">Informe institucional</option><option value="law">Ley o norma jurídica (requiere formato especializado)</option></select>'+
+m4Input('sourceAuthor','Autor o institución responsable','Ejemplo: Pérez, J. o Ministerio de Educación',2)+
+m4Input('sourceYear','Año de publicación','Ejemplo: 2023',1)+
+m4Input('sourceJournal','Nombre de la revista o sitio web','Completa según el tipo de documento',1)+
+m4Input('sourceVolume','Volumen de la revista (si corresponde)','Ejemplo: 12',1)+
+m4Input('sourceIssue','Número de la revista (si corresponde)','Ejemplo: 2',1)+
+m4Input('sourcePages','Páginas del artículo (si corresponde)','Ejemplo: 45–60',1)+
+m4Input('sourcePublisher','Editorial o institución editora (si corresponde)','Ejemplo: universidad o entidad editora',1)+
+'<button type="button" class="edu-ghost" data-m4-apa>Generar borrador de referencia APA 7</button>'+
+m4Input('sourceAPA','Revisa y corrige tu referencia bibliográfica','Aquí aparecerá el borrador, que puedes editar.',4)+
+'<div id="eduM4APAFeedback" class="edu-m4-apa-feedback" role="status" aria-live="polite"></div>'+
+'<p class="field-tip">En APA 7, cuando existe DOI, normalmente se presenta como enlace <code>https://doi.org/...</code>. Verifica autoría, puntuación, cursivas y el formato particular del documento. Para leyes, consulta las orientaciones jurídicas que correspondan.</p><a href="https://apastyle.apa.org/style-grammar-guidelines/references/examples" target="_blank" rel="noopener noreferrer">Consultar ejemplos de referencias APA 7 (sitio oficial)</a></section>')+
+action(4);
+}
+function m4RenderQuote(){
+const el=guide.querySelector('#eduM4Quote');if(el)el.textContent=(data.fields.evidence||'').trim()||'Tu fragmento aparecerá aquí cuando lo pegues en el paso 4.';
+const loc=guide.querySelector('#eduM4QuoteLocation');if(loc)loc.textContent=(data.fields.sourceLocator||'').trim()?'Localización: '+data.fields.sourceLocator:'Localización todavía no indicada.';
+}
+function m4NormalizeURL(raw){
+const value=String(raw||'').trim().replace(/^doi:\s*/i,'');
+const found=value.match(/^(?:https?:\/\/(?:dx\.)?doi\.org\/)?(10\.\d{4,9}\/\S+)$/i);
+if(found)return 'https://doi.org/'+found[1];
+if(/^https?:\/\/\S+\.\S+/.test(value))return value;
+return '';
+}
+function m4Review(){
+const el=guide.querySelector('#eduM4Review');if(!el)return;
+const pre=(data.fields.preamble||'').trim(),quote=(data.fields.evidence||'').trim(),com=(data.fields.commentary||'').trim();
+const loc=(data.fields.sourceLocator||'').trim(),link=m4NormalizeURL(data.fields.sourceUrl),topic=(data.fields.topic||'').trim();
+const results=[
+[pre.split(/\s+/).filter(Boolean).length>=12,'El preámbulo explica quién presenta la evidencia y por qué es relevante.'],
+[quote.split(/\s+/).filter(Boolean).length>=6,'Has incorporado un fragmento suficientemente identificable. Comprueba que sea exacto.'],
+[com.split(/\s+/).filter(Boolean).length>=15,'El comentario explica con detalle qué aporta la evidencia.'],
+[Boolean(loc),'Indicaste la página o el apartado del documento para localizar la cita.'],
+[Boolean(link),'Incluiste un DOI o enlace web con un formato reconocible. Debes abrirlo y verificarlo.'],
+[Boolean(topic),'Tu tema está delimitado; comprueba que el fragmento realmente se relacione con él.']
+];
+const num=results.filter(x=>x[0]).length;
+const warnings=[
+!pre?'Redacta un preámbulo que presente al autor y la pertinencia de la cita.':null,
+!quote?'Incorpora un fragmento textual del documento original.':null,
+!com?'Escribe un comentario con tu interpretación y su relación con la pregunta comparativa.':null,
+pre&&com&&pre.toLowerCase()===com.toLowerCase()?'El preámbulo y el comentario son idénticos: cumplen funciones distintas.':null,
+quote&&com&&com.toLowerCase().includes(quote.toLowerCase())?'No copies toda la cita como comentario: interprétala con tus palabras.':null
+].filter(Boolean);
+el.innerHTML='<h5>Revisión orientativa: '+num+' de '+results.length+' aspectos comprobados</h5><ul>'+results.map(x=>'<li class="'+(x[0]?'edu-m4-ok':'edu-m4-improve')+'">'+(x[0]?'✓ ':'Por revisar: ')+escapeHTML(x[1])+'</li>').join('')+'</ul>'+(warnings.length?'<p><strong>Recomendaciones:</strong> '+warnings.map(x=>escapeHTML(x)).join(' ')+'</p>':'<p>La estructura está suficientemente completa para una revisión humana. Aún debes verificar la fidelidad, el significado y la pertinencia de la cita.</p>')+'<p><strong>Esta comprobación no sustituye al docente ni verifica automáticamente el contenido del documento.</strong></p>';
+put('m4ReviewChecked','yes');
+}
+function m4DraftAPA(){
+const type=get('sourceType'),author=get('sourceAuthor').trim(),year=get('sourceYear').trim(),title=(data.fields.sourceTitle||'').trim(),journal=get('sourceJournal').trim(),volume=get('sourceVolume').trim(),issue=get('sourceIssue').trim(),pages=get('sourcePages').trim(),publisher=get('sourcePublisher').trim(),link=m4NormalizeURL(data.fields.sourceUrl);
+const info=guide.querySelector('#eduM4APAFeedback');
+const missing=[];if(!type)missing.push('tipo de documento');if(!author)missing.push('autor o institución');if(!year)missing.push('año');if(!title)missing.push('título');if(!link)missing.push('DOI o enlace válido');if(type==='article'&&!journal)missing.push('nombre de la revista');
+if(type==='law'){if(info)info.textContent='Las normas jurídicas requieren un formato específico según la jurisdicción. Registra el nombre de la ley, número, fecha, fuente oficial y URL; verifica la referencia con el docente. No se generará una cita jurídica potencialmente incorrecta.';return}
+if(missing.length){if(info)info.textContent='Faltan datos: '+missing.join(', ')+'. Revisa el documento y complétalos antes de generar el borrador.';return}
+let draft=author+' ('+year+'). '+title+'. ';
+if(type==='article')draft+=journal+(volume?', '+volume+(issue?'('+issue+')':''):'')+(pages?', '+pages:'')+'. ';
+if(type==='web'){if(journal&&journal.toLowerCase()!==author.toLowerCase())draft+=journal+'. ';}
+if(type==='report'){if(publisher&&publisher.toLowerCase()!==author.toLowerCase())draft+=publisher+'. ';}
+draft+=link;
+const area=guide.querySelector('#edu_sourceAPA');if(area){area.value=draft;put('sourceAPA',draft)}
+if(info)info.textContent='Borrador generado. Comprueba las cursivas del título o revista, las iniciales, el orden de autores y la puntuación. Las referencias finales deben ajustarse manualmente a APA 7.';
 }
 function moduleFive(){
 return '<div class="edu-stage-header"><span class="tag">Módulo 5 · Describe</span><h2>Describe cada caso con evidencia</h2><p>Primero organiza lo que sabes de cada país. Todavía no determines cuál es mejor: documenta hechos comparables.</p></div>'+
@@ -336,12 +424,12 @@ function mount(n){
 active=n;document.querySelectorAll('.sidebar [data-edunav]').forEach(b=>{const selected=Number(b.dataset.edunav)===n;b.classList.toggle('active',selected);if(selected)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')});const backupBtn=document.querySelector('.sidebar [data-edu-backup]');if(backupBtn)backupBtn.classList.remove('active');
 guide.innerHTML=header(n)+'<div class="edu-module-content">'+stageHTML(n)+'</div>';if(n===0){const scene=document.querySelector('#home .guide-scene');const target=guide.querySelector('.edu-stage-header');if(scene&&target)target.append(scene.cloneNode(true))}
 if(false){const section=originalStages[n];const target=guide.querySelector('.edu-stage-header');if(section){const copy=section.cloneNode(true);copy.removeAttribute('id');copy.hidden=false;copy.classList.add('edu-legacy');if(n===1){const button=copy.querySelector('[onclick="complete(1)"]');if(button)button.remove();const oldQ=copy.querySelector('#q1');if(oldQ){const oldP=oldQ.previousElementSibling;const oldH=oldP&&oldP.previousElementSibling;if(oldP&&oldP.tagName==='P')oldP.remove();if(oldH&&oldH.tagName==='H3')oldH.remove();oldQ.remove()}const feedback=copy.querySelector('#f1');if(feedback)feedback.remove();}if(n===2){const button=copy.querySelector('[onclick="complete(2)"]');if(button)button.remove();}if(n===3){const button=copy.querySelector('[onclick="complete(3)"]');if(button)button.remove();}compactLegacy(copy,n);target.insertAdjacentElement('afterend',copy);}}
-if(n===4&&oldLab){const place=E('eduSourceMove');if(place){const sourceCopy=oldLab.cloneNode(true);sourceCopy.hidden=false;place.append(sourceCopy)}}
+
 guide.querySelectorAll('[data-save]').forEach(el=>{el.value=get(el.dataset.save)});
 if(n===1){const el=guide.querySelector('#need');if(el)el.value=data.fields.need||''}
 if(n===2)m2Init();
 if(n===3){m3Init()}
-if(n===4){['preamble','evidence','commentary','sourceTitle','sourceUrl','sourceLocator','sourceIdea','sourceNote'].forEach(id=>{const el=guide.querySelector('#'+id);if(el)el.value=data.fields[id]||''});drawBank()}
+if(n===4){['preamble','evidence','commentary','sourceTitle','sourceUrl','sourceLocator'].forEach(id=>{const el=guide.querySelector('#'+id);if(el)el.value=data.fields[id]||''});m4RenderQuote()}
 if(n===5)drawDescriptions();
 if(n===6)drawMatrix();
 if(n===8){E('eduReportQuestion').textContent=data.fields.question||'Pendiente';E('eduReportObjective').textContent=data.fields.general||'Pendiente'}
@@ -358,12 +446,12 @@ if(n===0&&(!get('studentName').trim()||get('likert')===''))return msg('Escribe t
 if(n===1&&(!data.fields.need?.trim()||!get('researchPurpose')?.trim()||!get('ownDefinition')?.trim()||get('quiz_comparar')!=='1'||get('matchResult_concepts')!=='correct'||m1Practice.some(q=>get('quiz_'+q.id)!==String(q.answer))))return msg('Completa tu situación educativa, qué quieres investigar, las relaciones y las preguntas de repaso. Revisa las respuestas incorrectas.',true);
 if(n===2){const blank=required[2].find(k=>!String(data.fields[k]||'').trim());if(blank)return msg('Completa los campos de tu delimitación: falta '+blank+'.',true);if(m2SelectedCountries().length!==3)return msg('Selecciona exactamente tres países.',true);if(get('quiz_delimit')!=='1'||get('quiz_question')!=='2')return msg('Revisa las dos actividades y sus explicaciones antes de continuar.',true)}
 if(n===3){if(!data.fields.general?.trim()||m3SpecificKeys().length<2)return msg('Redacta el objetivo general y selecciona al menos dos objetivos específicos.',true);if(data.extra.criteria.length<2||data.extra.criteria.length>4)return msg('Selecciona de dos a cuatro criterios.',true);if(!get('m3ReviewViewed'))return msg('Realiza la revisión orientativa de tus objetivos antes de continuar.',true)}
-if(n===4){if(!(data.extra.sources||[]).length)return msg('Guarda al menos una ficha en el banco de fuentes.',true);if(get('quiz_sources')!=='1'||get('quiz_ai')!=='1'||get('orderResult_search')!=='correct')return msg('Completa la búsqueda ordenada y las actividades de fuentes e IA.',true)}
+if(n===4){const blank=required[4].find(k=>!String(data.fields[k]||'').trim());if(blank)return msg('Completa tu fuente, su localización, el fragmento, el preámbulo y el comentario.',true);if(!m4NormalizeURL(data.fields.sourceUrl))return msg('Introduce un DOI o enlace web con formato válido.',true);if(!get('sourceAPA').trim())return msg('Redacta la referencia bibliográfica en APA 7.',true);if(!get('sourceKeywords').trim())return msg('Escribe las palabras clave de tu búsqueda.',true);if(get('quiz_sources')!=='1'||get('quiz_ai')!=='1'||get('orderResult_search')!=='correct')return msg('Completa las actividades de búsqueda, orden y uso de IA.',true);if(!get('m4ReviewChecked'))return msg('Utiliza la revisión orientativa del preámbulo, cita y comentario.',true);data.extra.sources=data.extra.sources||[];const source={title:data.fields.sourceTitle,url:m4NormalizeURL(data.fields.sourceUrl),locator:data.fields.sourceLocator,idea:data.fields.evidence,note:data.fields.commentary,author:get('sourceAuthor'),year:get('sourceYear'),apa:get('sourceAPA')};const index=data.extra.sources.findIndex(x=>x.url===source.url);if(index>=0)data.extra.sources[index]=source;else data.extra.sources.push(source)}
 if(n===5&&(countries().some(c=>!String(data.extra.descriptions[c]||'').trim())||get('orderResult_paragraph')!=='correct'||get('quiz_paraphrase')!=='1'))return msg('Completa la descripción de cada país y las prácticas del párrafo académico.',true);
 if(n===6&&(!get('similarities').trim()||!get('differences').trim()||get('quiz_matrix')!=='1'||criteria().some(criterion=>countries().some(country=>!String((data.extra.matrix[criterion]||{})[country]||'').trim()))))return msg('Completa tu matriz por país y criterio, señala semejanzas y diferencias y revisa la práctica.',true);
 if(n===7&&(!get('analysis').trim()||!get('limitations').trim()||!get('proposal').trim()||get('quiz_interpret')!=='1'))return msg('Incluye interpretación, limitaciones y propuesta, y revisa la práctica.',true);
 if(n===8&&(!get('conclusion').trim()||get('orderResult_report')!=='correct'))return msg('Redacta tus conclusiones y revisa el orden del informe.',true);
-if(n>0&&![1,2,3].includes(n)&&!get('rubric_'+n))return msg('Selecciona una opción de autoevaluación antes de continuar.',true);data.extra.moduleDone[n]=true;data.completed=Math.max(Number(data.completed)||0,n);persist();const nextBtn=document.querySelector('.sidebar [data-edunav="'+(n+1)+'"]');if(nextBtn)nextBtn.disabled=false;if(n<8){navigate(n+1)}else{msg('¡Ruta completada! Revisa tus respuestas y evidencias antes de presentar el informe.');}
+if(n>0&&![1,2,3,4].includes(n)&&!get('rubric_'+n))return msg('Selecciona una opción de autoevaluación antes de continuar.',true);data.extra.moduleDone[n]=true;data.completed=Math.max(Number(data.completed)||0,n);persist();const nextBtn=document.querySelector('.sidebar [data-edunav="'+(n+1)+'"]');if(nextBtn)nextBtn.disabled=false;if(n<8){navigate(n+1)}else{msg('¡Ruta completada! Revisa tus respuestas y evidencias antes de presentar el informe.');}
 }
 function navigate(n){if(!Number.isInteger(n)||n<0||n>8||n>nextUnlocked())return;active=n;document.querySelectorAll('main > section').forEach(s=>{if(s!==guide)s.hidden=true});E('home').hidden=true;guide.hidden=false;mount(n);history.replaceState(null,'','#modulo-'+n);window.scrollTo({top:0,behavior:'instant'});if(typeof setupReveals==='function')requestAnimationFrame(setupReveals);const heading=guide.querySelector('h2');if(heading){heading.tabIndex=-1;heading.focus({preventScroll:true})}}
 function returnToMap(){
@@ -403,14 +491,14 @@ guide.addEventListener('drop',e=>{const li=e.target.closest('[data-order-id]');i
 guide.addEventListener('input',e=>{const t=e.target;if(t.id==='edu_m3Question'){data.fields.question=t.value;persist();return}
 if(t.dataset.m2Other){data.fields[t.dataset.m2Other]=t.value;persist();return}
 if(t.id==='eduM2DimensionOther'){m2SaveDimensions();return}
-if(t.dataset.save){put(t.dataset.save,t.value);return}if(t.dataset.countryDescription){data.extra.descriptions[t.dataset.countryDescription]=t.value;persist();return}if(t.dataset.matrixCriterion){data.extra.matrix[t.dataset.matrixCriterion]=data.extra.matrix[t.dataset.matrixCriterion]||{};data.extra.matrix[t.dataset.matrixCriterion][t.dataset.matrixCountry]=t.value;persist();return}if(t.id&&['need','topic','countries','level','period','dims','question','general','specific1','specific2','coherence','preamble','evidence','commentary','sourceTitle','sourceUrl','sourceLocator','sourceIdea','sourceNote'].includes(t.id)){data.fields[t.id]=t.value;persist();if(t.id==='question'){const p=guide.querySelector('#questionMirror');if(p)p.textContent=t.value}}});
+if(t.dataset.save){put(t.dataset.save,t.value);return}if(t.dataset.countryDescription){data.extra.descriptions[t.dataset.countryDescription]=t.value;persist();return}if(t.dataset.matrixCriterion){data.extra.matrix[t.dataset.matrixCriterion]=data.extra.matrix[t.dataset.matrixCriterion]||{};data.extra.matrix[t.dataset.matrixCriterion][t.dataset.matrixCountry]=t.value;persist();return}if(t.id&&['need','topic','countries','level','period','dims','question','general','specific1','specific2','coherence','preamble','evidence','commentary','sourceTitle','sourceUrl','sourceLocator','sourceIdea','sourceNote'].includes(t.id)){data.fields[t.id]=t.value;persist();if(t.id==='evidence'||t.id==='sourceLocator')m4RenderQuote();if(t.id==='question'){const p=guide.querySelector('#questionMirror');if(p)p.textContent=t.value}}});
 guide.addEventListener('change',e=>{const t=e.target;
 if(t.dataset.m3Specific){m3SyncSpecific();return}
 if(t.dataset.m2SelectCountry){const selected=guide.querySelectorAll('[data-m2-select-country]:checked');if(selected.length>3){t.checked=false;const msg=guide.querySelector('#eduM2CountryCount');if(msg)msg.textContent='Puedes seleccionar exactamente tres países.';return}m2SaveCountries();return}
 if(t.dataset.m2Dimension){m2SaveDimensions();return}
 if(t.dataset.m2Field){const id=t.dataset.m2Field;const other=guide.querySelector('#'+id+'Other');other.hidden=t.value!=='__other';data.fields[id]=t.value==='__other'?other.value.trim():t.value;persist();if(!other.hidden)other.focus();return}
 if(t.dataset.save){put(t.dataset.save,t.value)}if(t.dataset.checkModule){const n=t.dataset.checkModule;data.extra.checks[n]=data.extra.checks[n]||{};data.extra.checks[n][t.dataset.checkIndex]=t.checked;persist()}if(t.dataset.criterion){if(t.checked&&!data.extra.criteria.includes(t.dataset.criterion))data.extra.criteria.push(t.dataset.criterion);if(!t.checked)data.extra.criteria=data.extra.criteria.filter(x=>x!==t.dataset.criterion);persist()}if(t.dataset.matchItem){const root=t.closest('[data-match]');const key='match_'+root.dataset.match;data.extra.responses[key]=data.extra.responses[key]||{};data.extra.responses[key][t.dataset.matchItem]=t.value;persist()}});
-guide.addEventListener('click',e=>{const t=e.target.closest('button');if(!t)return;if(t.dataset.m2Flip!==undefined){const flipped=t.classList.toggle('is-flipped');t.setAttribute('aria-pressed',String(flipped));return}if(t.dataset.m3Review!==undefined){m3Review();return}
+guide.addEventListener('click',e=>{const t=e.target.closest('button');if(!t)return;if(t.dataset.m4Review!==undefined){m4Review();return}if(t.dataset.m4Apa!==undefined){m4DraftAPA();return}if(t.dataset.m2Flip!==undefined){const flipped=t.classList.toggle('is-flipped');t.setAttribute('aria-pressed',String(flipped));return}if(t.dataset.m3Review!==undefined){m3Review();return}
 if(t.dataset.m3Suggest){m3Suggest(t.dataset.m3Suggest);return}
 if(t.dataset.m2Country){guide.querySelectorAll('[data-m2-country]').forEach(b=>{const active=b===t;b.classList.toggle('is-selected',active);b.setAttribute('aria-pressed',String(active))});const info=guide.querySelector('#eduM2CountryInfo');if(info)info.innerHTML=m2CountryHTML(t.dataset.m2Country);return}
 if(t.dataset.stage!==undefined){navigate(Number(t.dataset.stage));return}if(t.dataset.quiz===undefined&&t.dataset.answer!==undefined){const root=t.closest('[data-quiz]'),id=root.dataset.quiz;put('quiz_'+id,t.dataset.answer);root.querySelectorAll('[data-answer]').forEach(btn=>{btn.classList.toggle('chosen',btn===t);btn.setAttribute('aria-pressed',String(btn===t))});const fb=root.querySelector('[data-feedback]');const m2Item=id==='delimit'?{correct:'¡Bien hecho! Identificaste un fenómeno, tres países, nivel, período y dimensiones.',wrong:['La propuesta es demasiado amplia y no delimita países ni criterios.','','No especifica los elementos necesarios para comparar.']}:id==='question'?{correct:'¡Excelente! La pregunta compara las mismas dimensiones en los tres países y define el período.',wrong:['Supone que un país es mejor sin evidencia ni criterios.','Cada país se estudia desde un aspecto diferente; no hay criterios comunes.','','Presupone culpables y no define criterios verificables.']}:null;const m1Item=[...m1Practice,{id:'comparar',q:'',options:[],answer:1,correct:'Compara un mismo fenómeno (apoyo a la lectura) en dos países. Para investigar, aún habría que precisar el nivel y el período.',wrong:['Esta pregunta solo pide definir un concepto. No compara dos casos.','','Esta pregunta es demasiado general: no especifica los casos ni el criterio.']}].find(item=>item.id===id);const right=Number(t.dataset.answer)===Number(root.dataset.correct);fb.dataset.result=right?'correct':'incorrect';fb.textContent=m2Item?(right?'Correcto. '+m2Item.correct:'Incorrecto. '+(m2Item.wrong[Number(t.dataset.answer)]||'Revisa tu respuesta.')):m1Item?(right?'Correcto. '+m1Item.correct:'Incorrecto. '+(m1Item.wrong[Number(t.dataset.answer)]||'Revisa la explicación y vuelve a intentar.')):(right?'Correcto. Puedes continuar.':'Todavía no. Revisa el ejemplo y vuelve a intentarlo.');return}if(t.dataset.phenomenon!==undefined){const item=phenomenaM1[Number(t.dataset.phenomenon)];const field=guide.querySelector('#need');if(item&&field){field.value=item.idea;data.fields.need=field.value;guide.querySelectorAll('[data-phenomenon]').forEach(b=>{const selected=b===t;b.classList.toggle('is-selected',selected);b.setAttribute('aria-pressed',String(selected))});persist();field.focus()}return}if(t.dataset.topic){const f=guide.querySelector('#topic');if(f){f.value=t.dataset.topic;data.fields.topic=t.dataset.topic;persist();f.focus()}return}if(t.id==='eduQuestionDraft'){const f=guide.querySelector('#question');if(f){const q='¿Qué semejanzas y diferencias existen en '+(data.fields.dims||'las estrategias')+' relacionadas con '+(data.fields.topic||'el fenómeno educativo')+' en '+(data.fields.countries||'los países seleccionados')+' durante '+(data.fields.period||'el período definido')+' en '+(data.fields.level||'el nivel seleccionado')+'?';f.value=q;data.fields.question=q;persist();f.focus()}return}if(t.dataset.matchCheck){matchCheck(t.dataset.matchCheck);return}if(t.dataset.orderCheck){orderCheck(t.dataset.orderCheck);return}if(t.dataset.move){orderMove(t.closest('li'),Number(t.dataset.move));return}if(t.dataset.addSource!==undefined){const source={title:data.fields.sourceTitle||'',url:data.fields.sourceUrl||'',locator:data.fields.sourceLocator||'',idea:data.fields.sourceIdea||'',note:data.fields.sourceNote||'',author:get('sourceAuthor'),year:get('sourceYear')};if(!source.title||!source.url||!source.idea||!/^https?:\/\//i.test(source.url)){const p=E('eduSourceBank');p.textContent='Completa título, enlace válido (https://...) e idea útil para guardar la ficha.';return}data.extra.sources=data.extra.sources||[];data.extra.sources.push(source);persist();drawBank();return}if(t.dataset.complete!==undefined){advance(Number(t.dataset.complete));return}if(t.dataset.export!==undefined){exportWord(Number(t.dataset.export));return}});
