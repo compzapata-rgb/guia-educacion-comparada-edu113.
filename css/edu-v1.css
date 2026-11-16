@@ -105,3 +105,31 @@ header nav,.radial-nav{display:none!important}
 #eduNext .edu-module-actions [data-complete="0"]{flex:0 1 240px}
 @media(max-width:750px){.edu-workflow{flex-direction:column;align-items:stretch;gap:3px}.edu-flow-arrow{transform:rotate(90deg);height:25px;flex:0 0 25px}.edu-flow-step{min-height:85px;display:grid;grid-template-columns:44px 1fr;column-gap:12px;text-align:left;padding:12px 15px}.edu-flow-icon{grid-row:span 2}.edu-flow-step small{max-width:none}.edu-flow-step strong{align-self:end}.edu-flow-step small{align-self:start}}
 @media(prefers-reduced-motion:reduce){.edu-flow-step,.edu-flow-arrow{transition:none!important}}
+
+/* EDU-113 módulo 1 · aprendizaje visual, casos y retroalimentación específica */
+#eduNext .edu-case-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:15px 0}
+#eduNext .edu-case-tile{background:#edf6fc;border:1px solid #cbdfe9;border-radius:15px;padding:15px;display:flex;flex-direction:column;gap:7px;min-width:0}
+#eduNext .edu-case-icon{font-size:24px}
+#eduNext .edu-case-label{font-weight:750;font-size:13px;text-decoration:underline;color:#315c83}
+#eduNext .edu-case-tile strong{line-height:1.45;color:#193c5e;font-size:15px}
+#eduNext .edu-phenomena{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:18px 0}
+#eduNext .edu-phenomenon{background:#f5f9fc;color:#213e58;border:2px solid #d1e1eb;border-radius:14px;text-align:left;padding:15px;display:flex;flex-direction:column;gap:6px;min-height:125px;transition:border-color .18s,background-color .18s,transform .18s}
+#eduNext .edu-phenomenon:hover{border-color:#3977a5;background:#eaf4fb}
+#eduNext .edu-phenomenon.is-selected{border-color:#1f3d66;background:#e1f1fc;box-shadow:inset 0 0 0 1px #1f3d66}
+#eduNext .edu-phenomenon-icon{font-size:24px}
+#eduNext .edu-phenomenon strong{font-size:16px}
+#eduNext .edu-phenomenon small{font-size:13px;line-height:1.45;color:#465f75}
+#eduNext .edu-m1-assessment{display:grid;gap:12px}
+#eduNext .edu-mini-question{padding:14px 15px;border:1px solid #d9e5ef;border-radius:14px;background:#fbfdff}
+#eduNext .edu-mini-count{display:inline-block;color:#315c83;font-size:12px;font-weight:800;margin-bottom:9px}
+#eduNext .edu-m1-quiz .edu-question{margin:0 0 14px}
+#eduNext .edu-m1-quiz .edu-answer{margin:7px 0;min-height:45px}
+#eduNext .edu-feedback[data-result=correct]{background:#e8f7ef;color:#14583f;border-left:4px solid #23836d;font-weight:650}
+#eduNext .edu-feedback[data-result=incorrect]{background:#fff1ed;color:#8a3321;border-left:4px solid #bf573f;font-weight:650}
+#eduNext .edu-check-intro{padding:19px 20px 8px;border:1px solid #cbdfea;border-radius:15px 15px 0 0;background:#f1f7fc;margin-top:18px}
+#eduNext .edu-check-intro h3{color:#1f3d66;margin:0 0 9px}
+#eduNext .edu-check-intro p{margin:0 0 10px;line-height:1.5}
+#eduNext .edu-check-intro+.edu-check-panel{margin-top:0;border-top:0;border-radius:0 0 15px 15px}
+#eduNext .edu-check-intro+.edu-check-panel>h3{display:none}
+@media(max-width:620px){#eduNext .edu-case-grid,#eduNext .edu-phenomena{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){#eduNext .edu-phenomenon{transition:none}}
