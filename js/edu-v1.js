@@ -19,6 +19,8 @@ data.extra.matrix=data.extra.matrix||{};
 data.extra.checks=data.extra.checks||{};
 data.extra.moduleDone=data.extra.moduleDone||{};
 if(Number(data.completed)>0)data.extra.moduleDone[0]=true;for(let i=1;i<=Math.min(3,Number(data.completed)||0);i++)data.extra.moduleDone[i]=true;
+// Activar false al publicar la versión oficial con requisitos obligatorios.
+const REVIEW_MODE=true;
 let active=0;
 let noticeTimer;
 const E=(id)=>document.getElementById(id);
@@ -40,7 +42,7 @@ function checkModule(n,items){
 const done=data.extra.checks[n]||{};
 return '<div class="edu-check-panel"><h3>Revisa tu producto antes de continuar</h3>'+items.map((text,i)=>'<label class="edu-check"><input type="checkbox" data-check-module="'+n+'" data-check-index="'+i+'" '+(done[i]?'checked':'')+'><span>'+text+'</span></label>').join('')+'<label for="edu_rubric_'+n+'">Autoevaluación de este producto</label><select id="edu_rubric_'+n+'" data-save="rubric_'+n+'">'+opts(['','Logrado','En proceso','Necesita mejoras'],get('rubric_'+n))+'</select><p class="field-tip">Esta lista sirve para autoevaluarte; no certifica la calidad metodológica de tus respuestas.</p></div>';
 }
-function action(n){return '<div class="edu-module-actions"><button type="button" class="edu-primary" data-complete="'+n+'">Guardar y continuar</button><p class="edu-action-feedback" data-module-feedback="'+n+'" role="status" aria-live="polite"></p></div>'}
+function action(n){return '<div class="edu-module-actions"><button type="button" class="edu-primary" data-complete="'+n+'">'+(REVIEW_MODE?'Continuar':'Guardar y continuar')+'</button><p class="edu-action-feedback" data-module-feedback="'+n+'" role="status" aria-live="polite"></p></div>'}
 function welcome(){
 return '<div class="edu-stage-header"><span class="tag">Módulo 0 · Bienvenida</span><h2>Tu primera investigación comparativa, paso a paso</h2><p>Investigar es buscar evidencias, organizarlas y explicar lo que significan. Aquí aprenderás haciendo, sin necesidad de dominar la investigación desde el inicio.</p></div>'+
 card('¿Qué vas a construir?','<p>Al finalizar esta guía, tendrás elaborados los elementos principales de tu primera investigación comparativa: un tema delimitado, una pregunta de investigación, objetivos claros, fuentes confiables y una matriz comparativa. Estos avances te servirán de base para organizar y redactar tu informe final.</p><div class="edu-workflow" role="img" aria-label="Flujo de aprendizaje: entender la investigación comparativa; elegir tema, pregunta y objetivos; buscar fuentes y describir casos; comparar mediante la matriz de yuxtaposición e interpretar; comunicar el informe final."><div class="edu-flow-step"><span class="edu-flow-icon" aria-hidden="true">◈</span><strong>Entender</strong><small>Módulo 1 · Fundamentos</small></div><span class="edu-flow-arrow" aria-hidden="true">→</span><div class="edu-flow-step"><span class="edu-flow-icon" aria-hidden="true">◎</span><strong>Elegir</strong><small>Módulos 2–3 · Tema y objetivos</small></div><span class="edu-flow-arrow" aria-hidden="true">→</span><div class="edu-flow-step"><span class="edu-flow-icon" aria-hidden="true">⌕</span><strong>Buscar</strong><small>Módulos 4–5 · Fuentes y casos</small></div><span class="edu-flow-arrow" aria-hidden="true">→</span><div class="edu-flow-step"><span class="edu-flow-icon" aria-hidden="true">⇄</span><strong>Comparar</strong><small>Módulos 6–7 · Yuxtaposición y análisis</small></div><span class="edu-flow-arrow" aria-hidden="true">→</span><div class="edu-flow-step"><span class="edu-flow-icon" aria-hidden="true">▤</span><strong>Producto final</strong></div></div>')+
@@ -510,7 +512,7 @@ const guide=E('eduNext')||document.createElement('section');
 guide.id='eduNext';guide.className='edu-next';guide.hidden=true;
 main.appendChild(guide);
 function header(n){return ''}
-function nextUnlocked(){let n=0;while(n<8&&data.extra.moduleDone[n])n++;return n}
+function nextUnlocked(){if(REVIEW_MODE)return 8;let n=0;while(n<8&&data.extra.moduleDone[n])n++;return n}
 function progressText(){let count=0;for(let i=0;i<=8;i++)if(data.extra.moduleDone[i])count++;return count}
 function stageHTML(n){
 if(n===0)return welcome();
@@ -552,6 +554,15 @@ function drawBank(){const root=E('eduSourceBank');if(!root)return;root.replaceCh
 function msg(text,bad=false){const target=guide.querySelector('[data-module-feedback="'+active+'"]');if(target){target.textContent=text;target.dataset.status=bad?'error':'success'}return !bad}
 function advance(n){
 if(n!==active)return;
+if(REVIEW_MODE){
+  const visited=Array.isArray(data.extra.reviewVisited)?data.extra.reviewVisited:[];
+  if(!visited.includes(n))visited.push(n);
+  data.extra.reviewVisited=visited;
+  data.extra.reviewStage=Math.min(n+1,8);
+  persist();
+  if(n<8)navigate(n+1);else returnToMap();
+  return;
+}
 if(n===0&&(!get('studentName').trim()||get('likert')===''))return msg('Escribe tu nombre y selecciona tu nivel de conocimientos previos.',true);
 if(n===1&&(!data.fields.need?.trim()||!get('researchPurpose')?.trim()||!get('ownDefinition')?.trim()||get('quiz_comparar')!=='1'||get('matchResult_concepts')!=='correct'||m1Practice.some(q=>get('quiz_'+q.id)!==String(q.answer))))return msg('Completa tu situación educativa, qué quieres investigar, las relaciones y las preguntas de repaso. Revisa las respuestas incorrectas.',true);
 if(n===2){const blank=required[2].find(k=>!String(data.fields[k]||'').trim());if(blank)return msg('Completa los campos de tu delimitación: falta '+blank+'.',true);if(m2SelectedCountries().length!==3)return msg('Selecciona exactamente tres países.',true);if(get('quiz_delimit')!=='1'||get('quiz_question')!=='2')return msg('Revisa las dos actividades y sus explicaciones antes de continuar.',true)}
@@ -563,31 +574,32 @@ if(n===7&&(!get('analysis').trim()||!get('limitations').trim()||!get('proposal')
 if(n===8&&(!get('conclusion').trim()||get('orderResult_report')!=='correct'))return msg('Redacta tus conclusiones y revisa el orden del informe.',true);
 if(n>0&&![1,2,3,4].includes(n)&&!get('rubric_'+n))return msg('Selecciona una opción de autoevaluación antes de continuar.',true);data.extra.moduleDone[n]=true;data.completed=Math.max(Number(data.completed)||0,n);persist();const nextBtn=document.querySelector('.sidebar [data-edunav="'+(n+1)+'"]');if(nextBtn)nextBtn.disabled=false;if(n<8){navigate(n+1)}else{msg('¡Ruta completada! Revisa tus respuestas y evidencias antes de presentar el informe.');}
 }
-function navigate(n){if(!Number.isInteger(n)||n<0||n>8||n>nextUnlocked())return;active=n;document.querySelectorAll('main > section').forEach(s=>{if(s!==guide)s.hidden=true});E('home').hidden=true;guide.hidden=false;mount(n);history.replaceState(null,'','#modulo-'+n);window.scrollTo({top:0,behavior:'instant'});if(typeof setupReveals==='function')requestAnimationFrame(setupReveals);const heading=guide.querySelector('h2');if(heading){heading.tabIndex=-1;heading.focus({preventScroll:true})}}
+function navigate(n){if(!Number.isInteger(n)||n<0||n>8||n>nextUnlocked())return;active=n;if(REVIEW_MODE){data.extra.reviewStage=n;persist()}document.querySelectorAll('main > section').forEach(s=>{if(s!==guide)s.hidden=true});E('home').hidden=true;guide.hidden=false;mount(n);history.replaceState(null,'','#modulo-'+n);window.scrollTo({top:0,behavior:'instant'});if(typeof setupReveals==='function')requestAnimationFrame(setupReveals);const heading=guide.querySelector('h2');if(heading){heading.tabIndex=-1;heading.focus({preventScroll:true})}}
 function returnToMap(){
   guide.hidden=true;E('home').hidden=true;
   document.querySelectorAll('main > section').forEach(s=>s.hidden=true);
   const site=E('map');site.hidden=false;
-  const done=progressText(),pct=Math.round(done/9*100),current=nextUnlocked();
-  site.innerHTML='<article class="card edu-route-map edu-island-map"><div class="edu-island-heading"><div><span class="tag">Ruta de investigación · EDU-113</span><h2>Mapa de progreso</h2><p>Visita las islas en orden. El personaje muestra dónde te quedaste y cada módulo se desbloquea al completar el anterior.</p></div><strong class="edu-island-meter">'+pct+'%<small>'+done+' de 9 apartados</small></strong></div><div class="edu-island-track" role="progressbar" aria-label="Progreso del curso" aria-valuemin="0" aria-valuemax="100" aria-valuenow="'+pct+'"><span style="width:'+pct+'%"></span></div><div class="edu-island-legend"><span>● Completado</span><span>● Etapa actual</span><span>● Bloqueado</span></div><div class="edu-island-list" id="eduIslandList"></div><div class="edu-island-next" id="eduIslandNext"></div></article>';
+  const reviewed=Array.isArray(data.extra.reviewVisited)?data.extra.reviewVisited:[];
+  const done=REVIEW_MODE?reviewed.length:progressText(),pct=Math.round(done/9*100),current=REVIEW_MODE?Math.max(0,Math.min(8,Number(data.extra.reviewStage)||0)):nextUnlocked();
+  site.innerHTML='<article class="card edu-route-map edu-island-map"><div class="edu-island-heading"><div><span class="tag">Ruta de investigación · EDU-113</span><h2>Mapa de progreso</h2><p>'+(REVIEW_MODE?'Modo de prueba: puedes abrir cualquier módulo sin completar las actividades. El personaje señala el último visitado.':'Visita las islas en orden. El personaje muestra dónde te quedaste y cada módulo se desbloquea al completar el anterior.')+'</p></div><strong class="edu-island-meter">'+pct+'%<small>'+done+' de 9 apartados</small></strong></div><div class="edu-island-track" role="progressbar" aria-label="Progreso del curso" aria-valuemin="0" aria-valuemax="100" aria-valuenow="'+pct+'"><span style="width:'+pct+'%"></span></div><div class="edu-island-legend"><span>'+(REVIEW_MODE?'● Visitado':'● Completado')+'</span><span>● Etapa actual</span><span>'+ (REVIEW_MODE?'● Disponible':'● Bloqueado')+'</span></div><div class="edu-island-list" id="eduIslandList"></div><div class="edu-island-next" id="eduIslandNext"></div></article>';
   const list=E('eduIslandList'),art=document.querySelector('#home .guide-character svg');
   labels.forEach((title,i)=>{
-    const finished=!!data.extra.moduleDone[i],locked=i>current,isNow=!finished&&i===current;
+    const finished=REVIEW_MODE?reviewed.includes(i):!!data.extra.moduleDone[i],locked=!REVIEW_MODE&&i>current,isNow=REVIEW_MODE?i===current:(!finished&&i===current);
     const stop=document.createElement('div');stop.className='edu-island-stage '+(finished?'done':locked?'locked':'current');
     const button=document.createElement('button');button.type='button';button.className='edu-island-button';button.disabled=locked;
     if(isNow)button.setAttribute('aria-current','step');
-    const number=document.createElement('span');number.className='edu-island-number';number.textContent=finished?'✓':String(i);
+    const number=document.createElement('span');number.className='edu-island-number';number.textContent=finished&&!isNow?'✓':String(i);
     const content=document.createElement('span');content.className='edu-island-info';
     const titleEl=document.createElement('strong');titleEl.textContent=(i?'Módulo '+i+' · ':'')+title;
     const description=document.createElement('small');description.textContent=descriptions[i];
-    const state=document.createElement('em');state.textContent=finished?'COMPLETADO':locked?'BLOQUEADO':'CONTINÚA AQUÍ';
+    const state=document.createElement('em');state.textContent=REVIEW_MODE?(isNow?'ETAPA ACTUAL':finished?'VISITADO':'DISPONIBLE'):finished?'COMPLETADO':locked?'BLOQUEADO':'CONTINÚA AQUÍ';
     content.append(titleEl,description,state);button.append(number,content);
     if(!locked)button.onclick=()=>navigate(i);
     if(isNow&&art){const avatar=document.createElement('span');avatar.className='edu-island-avatar';avatar.setAttribute('aria-hidden','true');avatar.append(art.cloneNode(true));button.append(avatar)}
     stop.append(button);list.append(stop);
   });
-  const bottom=E('eduIslandNext');const t=document.createElement('p');t.textContent=done===9?'¡Completaste la ruta! Puedes volver a revisar los módulos.':'Tu siguiente etapa: '+labels[current];bottom.append(t);
-  if(done!==9){const b=document.createElement('button');b.type='button';b.textContent='Ir a mi etapa';b.onclick=()=>navigate(current);bottom.append(b)}
+  const bottom=E('eduIslandNext');const t=document.createElement('p');t.textContent=REVIEW_MODE?'Modo de prueba: recorrido libre. Último módulo abierto: '+labels[current]+'.':done===9?'¡Completaste la ruta! Puedes volver a revisar los módulos.':'Tu siguiente etapa: '+labels[current];bottom.append(t);
+  if(REVIEW_MODE||done!==9){const b=document.createElement('button');b.type='button';b.textContent='Ir a mi etapa';b.onclick=()=>navigate(current);bottom.append(b)}
   history.replaceState(null,'','#mapa-de-progreso');window.scrollTo(0,0);
 }
 function matchCheck(id){const root=guide.querySelector('[data-match="'+id+'"]');if(!root)return;const selected=[...root.querySelectorAll('select')].map(x=>x.value);const expected=['Dificultades de lectura','Argentina, Bolivia y Perú','Currículo educativo'];const correct=selected.every((v,i)=>v===expected[i]);const msg=root.querySelector('[data-match-feedback]');msg.textContent=correct?'Correcto. El fenómeno es lo que estudias, los países son las unidades y el currículo es un criterio posible.':'Incorrecto. Recuerda: el fenómeno es la situación estudiada; las unidades son los países; el criterio es el aspecto que revisarás en todos.';msg.dataset.result=correct?'correct':'incorrect';put('matchResult_'+id,correct?'correct':'retry')}
