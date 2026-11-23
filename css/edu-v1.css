@@ -865,3 +865,26 @@ header.edu-header{--header-h:108px;height:var(--header-h);min-height:var(--heade
 #eduNext .edu-guide-fold .edu-guide-annotated{margin:14px 0}
 @media(max-width:650px){#eduNext .edu-source-grid{grid-template-columns:1fr}#eduNext .edu-source-card{min-height:68px}}
 @media(prefers-reduced-motion:reduce){#eduNext .edu-source-card{transition:none!important;transform:none!important}}
+
+/* EDU-113 v4.3 | Referencias APA 7 explicadas y demostración de sangría francesa */
+#eduNext .edu-apa7-guide h4{font-size:19px;color:#1f3d66;margin:20px 0 7px}
+#eduNext .edu-apa-parts{display:grid;grid-template-columns:repeat(auto-fit,minmax(175px,1fr));gap:10px;margin:16px 0}
+#eduNext .edu-apa-parts>div{background:#edf6fb;border:1px solid #c4daeb;padding:13px;border-radius:11px;display:grid;gap:6px}
+#eduNext .edu-apa-parts strong{font-size:16px;color:#1f3d66}
+#eduNext .edu-apa-parts span{font-size:14px;color:#36536e;line-height:1.5}
+#eduNext .edu-apa-compare{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:16px 0}
+#eduNext .edu-apa-compare>div{background:#f2f8fc;padding:15px;border-radius:11px;border:1px solid #c9deeb;min-width:0}
+#eduNext .edu-apa-compare code{white-space:normal;overflow-wrap:anywhere;font-size:13px}
+#eduNext .edu-apa-compare p{font-size:15px;line-height:1.55}
+#eduNext .edu-apa-example{background:#f6fafd;border:1px solid #d5e4ee;border-left:4px solid #3977a5;padding:15px;border-radius:9px;margin:12px 0;min-width:0}
+#eduNext .edu-apa-example>strong{font-size:16px;color:#1f3d66}
+#eduNext .edu-apa-example>p:not(.edu-apa-reference){font-size:15px;line-height:1.55}
+#eduNext .edu-apa-reference{overflow-wrap:anywhere;word-break:normal}
+#eduNext .edu-apa-reference a{overflow-wrap:anywhere}
+#eduNext .edu-apa-placeholder{color:#8b4c23;font-style:italic}
+#eduNext .edu-apa-preview{margin:16px auto;max-width:640px;padding:26px 28px;border:1px solid #b5ccdc;box-shadow:0 4px 16px #1f3d6612;background:#fff;box-sizing:border-box;font-family:Arial,sans-serif;font-size:13px;line-height:2;color:#182f47;overflow-wrap:anywhere}
+#eduNext .edu-apa-preview-title{text-align:center;font-weight:bold;font-size:15px;margin-bottom:20px}
+#eduNext .edu-apa-preview p{font-size:13px;line-height:2;letter-spacing:0;text-indent:-1.27cm;padding-left:1.27cm;margin:0 0 12px;text-align:left}
+#eduNext .edu-apa-subfold{margin:14px 0;background:#fff}
+@media(max-width:650px){#eduNext .edu-apa-preview{padding:18px 12px;font-size:12px}#eduNext .edu-apa-preview p{font-size:12px;padding-left:20px;text-indent:-20px}#eduNext .edu-apa-parts{grid-template-columns:1fr 1fr}}
+@media(max-width:360px){#eduNext .edu-apa-parts{grid-template-columns:1fr}}
