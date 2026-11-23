@@ -734,3 +734,87 @@ header.edu-header{--header-h:108px;height:var(--header-h);min-height:var(--heade
  }
  #eduNext .edu-rubric{min-width:790px}
 }
+
+
+/* EDU-113 3.4: globo de diálogo junto al rostro del personaje, no debajo.
+   Sobrescribe el flex-wrap heredado y conserva el tamaño máximo del avatar. */
+#home .guide-scene,
+#eduNext .edu-module-content .guia-personaje{
+  display:grid!important;
+  grid-template-columns:minmax(0, 5cm) minmax(0, 1fr)!important;
+  align-items:start!important;
+  justify-content:center!important;
+  column-gap:16px!important;
+  row-gap:0!important;
+  width:min(100%,690px)!important;
+  max-width:100%!important;
+  min-width:0!important;
+  margin-left:auto!important;
+  margin-right:auto!important;
+  overflow:visible!important;
+}
+#home .guide-scene > .guide-character.guia-avatar,
+#eduNext .edu-module-content .guia-personaje > .guia-avatar{
+  grid-column:1!important;
+  grid-row:1!important;
+  justify-self:center!important;
+  align-self:start!important;
+  width:min(5cm,100%)!important;
+  max-width:100%!important;
+  height:auto!important;
+  max-height:7cm!important;
+}
+#home .guide-scene > .guide-bubble,
+#eduNext .edu-module-content .guia-personaje > .guia-mensaje{
+  grid-column:2!important;
+  grid-row:1!important;
+  align-self:start!important;
+  justify-self:stretch!important;
+  position:relative!important;
+  width:100%!important;
+  min-width:0!important;
+  max-width:100%!important;
+  margin:2px 0 0!important;
+  padding:15px 18px!important;
+  font-size:19px!important;
+  line-height:1.45!important;
+  border:2px solid #afcfe2!important;
+  border-radius:17px!important;
+  background:#fff!important;
+  color:#173655!important;
+  box-sizing:border-box!important;
+  overflow-wrap:anywhere!important;
+  box-shadow:0 7px 25px #071c3225!important;
+}
+#home .guide-scene > .guide-bubble::before,
+#eduNext .edu-module-content .guia-personaje > .guia-mensaje::before{
+  content:""!important;
+  position:absolute!important;
+  top:26px!important;
+  left:-11px!important;
+  width:18px!important;
+  height:18px!important;
+  transform:rotate(45deg)!important;
+  background:#fff!important;
+  border-left:2px solid #afcfe2!important;
+  border-bottom:2px solid #afcfe2!important;
+}
+@media(max-width:650px){
+ #home .guide-scene,
+ #eduNext .edu-module-content .guia-personaje{
+   grid-template-columns:minmax(90px, 36%) minmax(0,1fr)!important;
+   gap:10px!important;
+   padding:9px 6px!important;
+ }
+ #home .guide-scene > .guide-bubble,
+ #eduNext .edu-module-content .guia-personaje > .guia-mensaje{
+   font-size:17px!important;
+   padding:11px 12px!important;
+   line-height:1.4!important;
+ }
+ #home .guide-scene > .guide-bubble::before,
+ #eduNext .edu-module-content .guia-personaje > .guia-mensaje::before{
+   top:20px!important;left:-10px!important;
+   transform:rotate(45deg)!important;
+ }
+}
