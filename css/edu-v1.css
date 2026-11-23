@@ -552,7 +552,7 @@ header.edu-header{--header-h:108px;height:var(--header-h);min-height:var(--heade
 .edu-island-info small{font-size:23px;color:#4A657C;line-height:1.4}
 .edu-island-info em{font-size:23px;font-style:normal;font-weight:850;letter-spacing:.04em;color:#3977A5}
 .edu-island-stage.current .edu-island-info em{color:#D71920}
-.edu-island-avatar{position:absolute;bottom:calc(100% - 26px);left:calc(100% - 12px);width:68px;height:90px;pointer-events:none;animation:route-float 2.8s ease-in-out infinite;filter:drop-shadow(0
+.edu-island-avatar{position:absolute;bottom:calc(100% - 26px);left:calc(100% - 12px);width:68px;height:90px;pointer-events:none;animation:route-float 2.8s ease-in-out infinite;filter:drop-shadow(0 4px 5px #193c5d33)}
 
 /* EDU-113 3.0 · Guía metodológica basada en el material docente */
 #eduNext .edu-module-content{max-width:960px;margin:0 auto}
