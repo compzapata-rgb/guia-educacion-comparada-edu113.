@@ -927,3 +927,12 @@ header.edu-header{--header-h:108px;height:var(--header-h);min-height:var(--heade
 #eduNext .edu-di-update-intro>a{display:inline-block;color:#1f3d66;font-weight:700;font-size:14px;border:1px solid #93b8d0;padding:8px 12px;border-radius:9px;background:#fff;text-decoration:none}
 #eduNext .edu-di-update-intro>a:hover,#eduNext .edu-di-update-intro>a:focus-visible{border-color:#1f3d66;background:#f4faff}
 #eduNext #eduDiTree,#eduNext #eduDiRoute,#eduNext #eduDiPractice{scroll-margin-top:120px}
+
+/* EDU-113 4.6 — video integrado en panorama metodológico */
+#eduNext .edu-video-section{display:grid;gap:13px;padding:20px;margin:12px 0 24px;border:1.5px solid #c6dce9;border-left:5px solid #d71920;border-radius:15px;background:#f4f9fc;max-width:100%;min-width:0;box-sizing:border-box}
+#eduNext .edu-video-section h3{font-size:22px;line-height:1.3;font-weight:800;color:#1f3d66;margin:0}
+#eduNext .edu-video-section p{font-size:16px;line-height:1.6;margin:0;color:#243b54}
+#eduNext .edu-video-shell{position:relative;width:100%;aspect-ratio:16/9;min-height:0;overflow:hidden;border-radius:12px;background:#152c49;box-shadow:0 6px 18px #1f3d6626}
+#eduNext .edu-video-shell iframe{display:block;position:absolute;inset:0;width:100%;height:100%;border:0}
+#eduNext .edu-video-commentary{padding:12px 15px;background:#e8f3f9;border-radius:10px;border-left:3px solid #3977a5}
+@media(max-width:650px){#eduNext .edu-video-section{padding:12px;gap:11px}#eduNext .edu-video-section h3{font-size:19px}#eduNext .edu-video-section p{font-size:15px}}
