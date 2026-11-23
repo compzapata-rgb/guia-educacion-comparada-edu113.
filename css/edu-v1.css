@@ -849,3 +849,19 @@ header.edu-header{--header-h:108px;height:var(--header-h);min-height:var(--heade
 #eduNext .edu-bloom-flag{font-size:10px;top:-9px;right:5px}
 #eduNext .edu-bloom-figure figcaption{font-size:17px}
 }
+
+/* EDU-113 v4.2 · Recursos académicos con iconos y ejemplos de APA 7 */
+#eduNext .edu-source-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(225px,1fr));gap:10px;margin:16px 0}
+#eduNext .edu-source-card{display:flex;align-items:center;gap:12px;border:1.5px solid #c2d9e8;border-radius:12px;padding:12px 13px;background:#fff;text-decoration:none!important;color:#1f3d66!important;min-height:74px;box-sizing:border-box;transition:border-color .15s,box-shadow .15s,transform .15s}
+#eduNext .edu-source-card:hover,#eduNext .edu-source-card:focus-visible{border-color:#3977a5;box-shadow:0 4px 14px #1f3d661d;transform:translateY(-1px)}
+#eduNext .edu-source-logo{position:relative;flex:0 0 43px;width:43px;height:43px;display:grid;place-items:center;border:1px solid #d6e6f0;border-radius:11px;background:#f2f7fb;color:#1f3d66;font-weight:800;font-size:18px}
+#eduNext .edu-source-logo img{position:relative;z-index:2;width:29px;height:29px;object-fit:contain;display:block;background:transparent}
+#eduNext .edu-source-logo .edu-source-initial{position:absolute;inset:0;display:grid;place-items:center}
+#eduNext .edu-source-info{flex:1;min-width:0;display:grid;gap:5px}
+#eduNext .edu-source-info strong{font-size:16px;line-height:1.25}
+#eduNext .edu-source-info small{font-size:13px;font-weight:400;color:#48647d;line-height:1.4}
+#eduNext .edu-source-out{font-size:18px;flex:0 0 18px;color:#3977a5}
+#eduNext .edu-apa-reference{background:#fff;border:1px solid #c5dceb;border-radius:9px;padding:14px 16px 14px 32px;text-indent:-16px;overflow-wrap:anywhere;font-size:15px!important}
+#eduNext .edu-guide-fold .edu-guide-annotated{margin:14px 0}
+@media(max-width:650px){#eduNext .edu-source-grid{grid-template-columns:1fr}#eduNext .edu-source-card{min-height:68px}}
+@media(prefers-reduced-motion:reduce){#eduNext .edu-source-card{transition:none!important;transform:none!important}}
