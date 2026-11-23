@@ -818,3 +818,34 @@ header.edu-header{--header-h:108px;height:var(--header-h);min-height:var(--heade
    transform:rotate(45deg)!important;
  }
 }
+
+/* EDU-113 v4.1 · Recurso gráfico accesible de Bloom y objetivos de investigación */
+#eduNext .edu-bloom-figure{margin:12px 0;padding:20px;border:1px solid #bfd6e7;border-radius:16px;background:linear-gradient(180deg,#f3f9fd,#fff);max-width:100%;box-sizing:border-box}
+#eduNext .edu-bloom-figure figcaption{display:grid;gap:6px;margin-bottom:17px;font-size:19px;color:#1f3d66}
+#eduNext .edu-bloom-figure figcaption span{font-size:15px;color:#526e82;font-weight:450}
+#eduNext .edu-bloom-ladder{display:flex;flex-direction:column;align-items:center;gap:7px}
+#eduNext .edu-bloom-level{display:grid;grid-template-columns:26px minmax(100px,1fr) minmax(110px,1.2fr);gap:10px;align-items:center;position:relative;box-sizing:border-box;min-height:70px;padding:10px 15px;background:#e8f1f7;border:1px solid #b6d3e5;color:#1f3d66;border-radius:11px;max-width:100%;width:calc(55% + (6 - var(--edu-bloom-index,0))*7%);}
+#eduNext .edu-bloom-level:nth-child(1){width:59%}
+#eduNext .edu-bloom-level:nth-child(2){width:66%}
+#eduNext .edu-bloom-level:nth-child(3){width:74%}
+#eduNext .edu-bloom-level:nth-child(4){width:82%}
+#eduNext .edu-bloom-level:nth-child(5){width:90%}
+#eduNext .edu-bloom-level:nth-child(6){width:100%}
+#eduNext .edu-bloom-number{display:grid;place-items:center;background:#1f3d66;color:#fff;width:26px;height:26px;border-radius:50%;font-weight:800;font-size:14px}
+#eduNext .edu-bloom-level strong{display:block;font-size:16px}
+#eduNext .edu-bloom-level small{display:block;font-size:12px;font-weight:550;line-height:1.4;margin-top:4px}
+#eduNext .edu-bloom-detail{font-size:13px;line-height:1.4}
+#eduNext .edu-bloom-focus{background:#1f3d66;color:#fff;border:3px solid #d71920;box-shadow:0 4px 14px #1f3d6629}
+#eduNext .edu-bloom-focus .edu-bloom-number{background:#fff;color:#1f3d66}
+#eduNext .edu-bloom-flag{position:absolute;right:9px;top:-12px;font-size:11px;font-weight:800;background:#d71920;color:#fff;padding:4px 9px;border-radius:14px;white-space:nowrap}
+#eduNext .edu-bloom-note{font-size:14px!important;line-height:1.55!important;color:#415f73;margin:14px 0 0!important}
+#eduNext .edu-objective-formula{margin:6px 0 12px}
+#eduNext .edu-objective-formula span{font-size:14px}
+#eduNext .edu-objective-kinds td:first-child{min-width:150px}
+@media(max-width:700px){
+#eduNext .edu-bloom-figure{padding:14px 8px}
+#eduNext .edu-bloom-level{grid-template-columns:24px minmax(0,1fr);gap:6px;width:100%!important;padding:12px 10px}
+#eduNext .edu-bloom-detail{grid-column:2;font-size:12px}
+#eduNext .edu-bloom-flag{font-size:10px;top:-9px;right:5px}
+#eduNext .edu-bloom-figure figcaption{font-size:17px}
+}
