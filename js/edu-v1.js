@@ -705,7 +705,7 @@ changeMainNav();
 const originalAvatar=document.querySelector('#home .guide-character');
 if(originalAvatar)originalAvatar.innerHTML=GUIDE_AVATAR;
 const originalBubble=document.querySelector('#home .guide-bubble');
-if(originalBubble)originalBubble.textContent='¡Bienvenido! Aprenderemos juntos a comprender cada fase de una investigación comparada, utilizando ejemplos claros, orientaciones del docente y actividades breves para revisar nuestros conocimientos.';
+if(originalBubble)originalBubble.textContent='Hola, soy Víctor y te doy la bienvenida a la guía metodológica de educación comparada. Te acompañaré durante cada sección para comprender las etapas y sus ejemplos.';
 const bar=E('eduSaveNotice')||document.createElement('div');bar.id='eduSaveNotice';bar.className='edu-save-notice';bar.setAttribute('role','status');bar.textContent='Progreso guardado en este navegador';document.body.append(bar);
 const past=location.hash.match(/^#modulo-(\d)$/);if(location.hash==='#mapa-de-progreso')returnToMap();else navigate(past?Math.min(nextUnlocked(),Number(past[1])):0);
 })();
