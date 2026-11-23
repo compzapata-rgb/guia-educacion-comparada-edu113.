@@ -603,3 +603,42 @@ header.edu-header{--header-h:108px;height:var(--header-h);min-height:var(--heade
 @keyframes guia-flotar{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
 @media(max-width:480px){#eduNext .guia-personaje{gap:12px;padding:12px}#eduNext .guia-mensaje{max-width:100%;font-size:17px}#eduNext .edu-guide-reading > p{font-size:16px}#eduNext .edu-guide-reading > h3{font-size:21px}#eduNext .edu-guide-navigation button{flex:1 1 130px}}
 @media(prefers-reduced-motion:reduce){#eduNext .guia-avatar,.guia-avatar.guide-character{animation:none!important}}
+
+/* EDU-113 v3.1: dimensiones físicas explícitas para evitar escalados inesperados */
+#home .guide-scene{display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap}
+#home .guide-character.guia-avatar,
+#eduNext .guia-personaje .guia-avatar{
+  box-sizing:border-box!important;
+  width:5cm!important;height:7cm!important;
+  max-width:5cm!important;max-height:7cm!important;
+  min-width:0!important;flex:0 0 5cm!important;
+  display:flex!important;align-items:flex-end;justify-content:center;
+}
+#home .guide-character.guia-avatar > svg,
+#eduNext .guia-personaje .guia-avatar > svg{
+  display:block!important;width:100%!important;height:100%!important;
+  max-width:100%!important;max-height:100%!important;
+  min-width:0!important;flex:none!important;
+}
+#eduNext .guia-personaje{display:flex;align-items:center;justify-content:center;gap:18px;flex-wrap:wrap;padding:12px 16px;margin:8px 0 18px}
+#home .guide-bubble,
+#eduNext .guia-personaje .guia-mensaje{
+  box-sizing:border-box;flex:0 1 390px;max-width:min(390px,100%);
+  font-size:19px!important;line-height:1.45;overflow-wrap:break-word;
+  padding:13px 17px;border:1px solid #c9dfea;border-radius:15px;
+  background:#fff;color:#173655;box-shadow:0 7px 25px #071c3225;
+}
+@media(max-width:650px){
+  #home .guide-character.guia-avatar,#eduNext .guia-personaje .guia-avatar{
+    width:4cm!important;height:5.6cm!important;
+    max-width:4cm!important;max-height:5.6cm!important;
+    flex-basis:4cm!important;
+  }
+  #home .guide-bubble,#eduNext .guia-personaje .guia-mensaje{
+    font-size:17px!important;flex-basis:100%;max-width:100%;padding:12px 14px;
+  }
+  #eduNext .guia-personaje{gap:9px;padding:9px 6px}
+}
+@media(prefers-reduced-motion:reduce){
+ #home .guide-character.guia-avatar,#eduNext .guia-personaje .guia-avatar{animation:none!important}
+}
