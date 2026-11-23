@@ -888,3 +888,34 @@ header.edu-header{--header-h:108px;height:var(--header-h);min-height:var(--heade
 #eduNext .edu-apa-subfold{margin:14px 0;background:#fff}
 @media(max-width:650px){#eduNext .edu-apa-preview{padding:18px 12px;font-size:12px}#eduNext .edu-apa-preview p{font-size:12px;padding-left:20px;text-indent:-20px}#eduNext .edu-apa-parts{grid-template-columns:1fr 1fr}}
 @media(max-width:360px){#eduNext .edu-apa-parts{grid-template-columns:1fr}}
+
+/* EDU-113 v4.4 · Descripción e interpretación: recursos visuales y práctica */
+#eduNext .edu-di-figure{margin:12px 0 20px;padding:16px;background:#f2f8fb;border:1px solid #c5dce9;border-radius:16px}
+#eduNext .edu-di-figure img{display:block;width:100%;height:auto;object-fit:contain;border-radius:10px}
+#eduNext .edu-di-figure figcaption{margin-top:11px;font-size:14px;line-height:1.5;color:#526b81}
+#eduNext .edu-di-route{overflow:hidden}
+#eduNext .edu-di-route img{min-width:0}
+#eduNext .edu-di-definitions >div{border-top:4px solid #3977a5}
+#eduNext .edu-di-two-examples{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:14px 0}
+#eduNext .edu-di-two-examples>div{padding:18px 19px;background:#fff;border:1px solid #c9ddea;border-top:4px solid #3977a5;border-radius:13px;min-width:0}
+#eduNext .edu-di-two-examples>div:nth-child(2){border-top-color:#d71920}
+#eduNext .edu-di-two-examples h4{font-size:18px;color:#1f3d66;margin:0 0 11px}
+#eduNext .edu-di-two-examples p{font-size:16px;line-height:1.6;margin:8px 0}
+#eduNext .edu-di-two-examples .edu-di-meaning{background:#eef6fb;padding:10px 12px;border-radius:9px;font-size:14px}
+#eduNext .edu-di-route-text{background:#f9fcfe;border-radius:13px;padding:20px 20px 20px 41px!important}
+#eduNext .edu-di-tip{background:#eaf4fa;border-left:5px solid #d71920;border-radius:12px;padding:21px;margin:8px 0}
+#eduNext .edu-di-tip h3{margin:0 0 9px;color:#1f3d66;font-size:19px}
+#eduNext .edu-di-tip p{font-size:16px;line-height:1.6;margin:9px 0}
+#eduNext .edu-di-exercises{display:grid;gap:14px}
+#eduNext .edu-di-exercise{border:1.5px solid #c5dae7;border-radius:14px;padding:18px;background:#fff}
+#eduNext .edu-di-exercise-header{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;color:#526d83;font-size:12px;font-weight:700}
+#eduNext .edu-di-exercise-text{color:#1f3d66;font-size:17px;line-height:1.55;font-weight:650;margin:12px 0}
+#eduNext .edu-di-choices{display:flex;flex-wrap:wrap;gap:10px}
+#eduNext .edu-di-choices button{border:2px solid #bfd7e6;background:#f4f9fc;color:#1f3d66;min-height:45px;min-width:150px;padding:10px 17px;border-radius:11px;font-size:15px;font-weight:750;cursor:pointer}
+#eduNext .edu-di-choices button:hover,#eduNext .edu-di-choices button:focus-visible{border-color:#3977a5;background:#e7f3fa}
+#eduNext .edu-di-choices button.is-selected{border-color:#1f3d66;background:#e0eef8}
+#eduNext .edu-di-exercise-feedback{margin:13px 0 0;padding:12px;border-radius:9px;background:#eff6fa;color:#35536b;font-size:14px;line-height:1.5}
+#eduNext .edu-di-exercise-feedback[data-result=correct]{border-left:4px solid #26856a;background:#ecf7f0;color:#1c5d49}
+#eduNext .edu-di-exercise-feedback[data-result=incorrect]{border-left:4px solid #d71920;background:#fff1f0;color:#793b43}
+#eduNext .edu-di-key{background:#eaf4fa;border:1px solid #c1d7e5;border-radius:13px;padding:16px 20px;font-size:16px;line-height:1.6}
+@media(max-width:650px){#eduNext .edu-di-two-examples{grid-template-columns:1fr}#eduNext .edu-di-figure{padding:8px}#eduNext .edu-di-choices button{flex:1 1 145px}#eduNext .edu-di-tip{padding:16px}}
