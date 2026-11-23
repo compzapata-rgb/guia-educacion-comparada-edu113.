@@ -695,3 +695,42 @@ header.edu-header{--header-h:108px;height:var(--header-h);min-height:var(--heade
    max-width:100%!important;
  }
 }
+
+/* EDU-113 3.3: globos orientadores y lista de cotejo delimitada */
+#eduNext .guia-personaje .guia-mensaje,
+#home .guide-scene .guide-bubble{
+  position:relative;
+  border:2px solid #afcfe2!important;
+  border-radius:18px!important;
+  background:#fff!important;
+}
+#eduNext .guia-personaje .guia-mensaje::before,
+#home .guide-scene .guide-bubble::before{
+  content:"";position:absolute;left:-11px;top:24px;
+  width:18px;height:18px;background:#fff;
+  border-left:2px solid #afcfe2;border-bottom:2px solid #afcfe2;
+  transform:rotate(45deg);
+}
+#eduNext .edu-rubric{border:2px solid #1f3d66!important;border-collapse:collapse!important;min-width:840px;background:#fff}
+#eduNext .edu-rubric th,#eduNext .edu-rubric td{
+ border:1.5px solid #567a9d!important;padding:11px 10px;vertical-align:middle;
+}
+#eduNext .edu-rubric thead th{background:#1f3d66!important;color:#fff!important;text-align:center}
+#eduNext .edu-rubric th[scope=rowgroup]{background:#dcecf7!important;vertical-align:middle}
+#eduNext .edu-rubric .edu-rubric-max{text-align:center;font-weight:800;color:#1f3d66}
+#eduNext .edu-rubric input,#eduNext .edu-rubric textarea{
+ display:block;width:100%;min-width:78px;box-sizing:border-box;
+ border:1.5px solid #8aaec6;border-radius:7px;padding:9px;
+ background:#fff;color:#243b54;font:inherit;font-size:15px;
+}
+#eduNext .edu-rubric input:focus-visible,#eduNext .edu-rubric textarea:focus-visible{
+ outline:3px solid #d71920;outline-offset:1px;
+}
+#eduNext .edu-rubric output{font-weight:800;color:#1f3d66;white-space:nowrap}
+#eduNext .edu-rubric .edu-guide-total th,#eduNext .edu-rubric .edu-guide-total td{background:#e8f4eb!important;font-weight:700}
+@media(max-width:650px){
+ #eduNext .guia-personaje .guia-mensaje::before,#home .guide-scene .guide-bubble::before{
+  left:24px;top:-11px;transform:rotate(135deg)
+ }
+ #eduNext .edu-rubric{min-width:790px}
+}
