@@ -642,3 +642,56 @@ header.edu-header{--header-h:108px;height:var(--header-h);min-height:var(--heade
 @media(prefers-reduced-motion:reduce){
  #home .guide-character.guia-avatar,#eduNext .guia-personaje .guia-avatar{animation:none!important}
 }
+
+/* EDU-113 3.2 · Refuerzo de contención: corrige SVG gigante en módulos y portada. */
+#eduNext .edu-module-content .guia-personaje,
+#home .guide-scene{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  flex-wrap:wrap!important;
+  gap:14px!important;
+  max-width:100%!important;
+  overflow:visible;
+}
+#eduNext .edu-module-content .guia-personaje > .guia-avatar,
+#home .guide-scene > .guia-avatar{
+  width:min(5cm,40vw)!important;
+  max-width:5cm!important;
+  min-width:0!important;
+  height:auto!important;
+  max-height:7cm!important;
+  aspect-ratio:5/7!important;
+  flex:0 0 auto!important;
+  box-sizing:border-box!important;
+  overflow:hidden!important;
+}
+#eduNext .edu-module-content .guia-personaje > .guia-avatar > svg,
+#home .guide-scene > .guia-avatar > svg{
+  display:block!important;
+  width:100%!important;
+  height:100%!important;
+  max-width:100%!important;
+  max-height:100%!important;
+  min-width:0!important;
+  min-height:0!important;
+  flex:none!important;
+}
+#eduNext .edu-module-content .guia-personaje > .guia-mensaje,
+#home .guide-scene > .guide-bubble{
+  box-sizing:border-box!important;
+  flex:0 1 360px!important;
+  width:auto!important;
+  max-width:min(360px,100%)!important;
+  font-size:19px!important;
+  line-height:1.45!important;
+  overflow-wrap:break-word;
+}
+@media(max-width:600px){
+ #eduNext .edu-module-content .guia-personaje > .guia-mensaje,
+ #home .guide-scene > .guide-bubble{
+   font-size:17px!important;
+   flex:0 1 100%!important;
+   max-width:100%!important;
+ }
+}
